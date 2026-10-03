@@ -12,6 +12,7 @@ export const images = [
   defineImage({ id: 'title', src: 'assets/ui/title.png' }),
   defineImage({ id: 'statusbar', src: 'assets/ui/statusbar.png' }),
   defineImage({ id: 'intermission', src: 'assets/ui/intermission.png' }),
+  defineImage({ id: 'intermission-e2', src: 'assets/ui/intermission-e2.png' }),
   defineImage({ id: 'finale-bg', src: 'assets/ui/finale-bg.png' }),
   defineImage({ id: 'finale-end', src: 'assets/ui/finale-end.png' }),
 ];

@@ -78,4 +78,9 @@ export default [
   // Leftovers: chicken bones and a puddle.
   defineDecoration({ id: 'bones', glyph: 'x', sheet: S('bones', 32, 16) }),
   defineDecoration({ id: 'puddle', glyph: '~', sheet: S('puddle', 40, 8) }),
+  // The warehouse. Every glyph is taken, so these have none: the warehouse
+  // levels give them one in their `thingLegend` (tools/levels/warehouse.py).
+  defineDecoration({ id: 'pallet', sheet: S('pallet', 48, 48), solid: true, radius: 0.42 }),
+  defineDecoration({ id: 'forklift', sheet: S('forklift', 64, 56), solid: true, radius: 0.45 }),
+  defineDecoration({ id: 'traffic-cone', sheet: S('traffic-cone', 24, 32), solid: true, radius: 0.14 }),
 ];

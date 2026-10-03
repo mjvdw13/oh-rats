@@ -1,5 +1,6 @@
 // Scenery around the house: furniture, toys, laundry, a TV, and the big
-// bottle of soda that goes KA-BLOOSH when you shoot it.
+// bottle of soda that goes KA-BLOOSH when you shoot it. Plus the warehouse:
+// pallets of boxes, a forklift and traffic cones.
 import { PixelCanvas, mix, lighten, darken } from '../lib/canvas.js';
 import { C, G } from '../lib/pal.js';
 import { Model, MAT } from '../lib/model.js';
@@ -300,6 +301,57 @@ const puddleDecor = () =>
     puddle(m, 20, 4, 17, 2.6, C('sky', 0.75), MAT.glass);
   });
 
+// ------------------------------------------------------------------ the warehouse
+
+/** A wooden pallet stacked with boxes and wrapped in plastic. */
+const pallet = () =>
+  model(48, 48, 343, (m) => {
+    shadow(m, 24, 46.5, 22);
+    const W = C('wood', 0.6);
+    m.slab([[2, 40], [46, 40], [46, 43], [2, 43]], 6, W, MAT.wood, { bevel: 1 }); // top deck
+    for (const x of [3, 21, 39]) m.slab([[x, 43], [x + 6, 43], [x + 6, 47], [x, 47]], 4, C('wood', 0.45), MAT.wood, { bevel: 0.6 }); // blocks
+    box(m, 4, 24, 20, 16, 5, C('wood', 0.62), MAT.paper, { topCol: C('wood', 0.7) });
+    box(m, 25, 22, 19, 18, 5, C('wood', 0.56), MAT.paper, { topCol: C('wood', 0.66) });
+    box(m, 10, 6, 24, 16, 6, C('wood', 0.64), MAT.paper, { topCol: C('wood', 0.72), z: 6 });
+    m.paint(22, 1, 2, 4, C('gray', 0.75)); // tape
+    m.paint(14, 30, 4, 3, C('beige', 0.92)); // labels
+    m.paint(34, 28, 3, 2.5, C('beige', 0.92));
+    m.paint(22, 13, 5, 2, C('blood', 0.55)); // THIS SIDE UP
+    m.tint((x, y, p) => (y < 40 && (x + y) % 9 === 0 ? lighten(p, 0.18) : p)); // the shrink wrap's shine
+  });
+
+/** A little yellow forklift, seen from the side, with its forks down. */
+const forklift = () =>
+  model(64, 56, 345, (m) => {
+    shadow(m, 34, 54, 28);
+    const Y = C('yellow', 0.72);
+    const K = C('gray', 0.18);
+    m.slab([[20, 26], [56, 26], [58, 46], [18, 46]], 6, Y, MAT.plastic, { bevel: 2, thickness: 3 }); // body
+    m.slab([[44, 18], [58, 22], [58, 30], [44, 30]], 7, darken(Y, 0.15), MAT.plastic, { bevel: 2 }); // counterweight
+    m.slab([[30, 20], [40, 20], [40, 27], [30, 27]], 9, C('gray', 0.3), MAT.leather, { bevel: 1.5 }); // seat
+    for (const x of [24, 46]) m.capsule(x, 4, 8, x, 26, 8, 1.3, 1.3, K, MAT.metal); // overhead guard posts
+    m.capsule(22, 4, 9, 48, 4, 9, 1.4, 1.4, K, MAT.metal);
+    m.capsule(26, 26, 10, 22, 18, 10, 0.8, 0.8, K, MAT.metal); // steering wheel
+    m.ellipsoid(22, 17, 10, 3, 1, 2, K, MAT.plastic);
+    m.slab([[11, 2], [17, 2], [17, 50], [11, 50]], 5, C('steel', 0.4), MAT.metal, { bevel: 1 }); // mast
+    m.slab([[1, 47], [14, 47], [14, 50], [1, 50]], 6, C('steel', 0.45), MAT.metal, { bevel: 0.6 }); // forks
+    for (const x of [27, 51]) {
+      m.sphere(x, 47, 12, 7, K, MAT.leather); // wheels
+      m.sphere(x, 47, 18, 2.6, C('steel', 0.75), MAT.metal);
+    }
+    m.sphere(47, 1, 10, 2, G('amber', 1), MAT.glow); // the warning light
+    m.paint(36, 36, 6, 2, K); // a stripe
+  });
+
+/** A traffic cone with a white band. */
+const trafficCone = () =>
+  model(24, 32, 347, (m) => {
+    shadow(m, 12, 30.5, 10);
+    m.slab([[2, 27], [22, 27], [22, 30], [2, 30]], 2, C('orange', 0.55), MAT.plastic, { bevel: 1 });
+    m.slab([[11, 2], [13, 2], [19, 27], [5, 27]], 4, C('orange', 0.65), MAT.plastic, { bevel: 3, thickness: 3 });
+    m.paint(12, 15, 4.2, 1.8, C('beige', 0.98));
+  });
+
 export default [
   { name: 'couch', out: D('couch'), draw: couch, dither: 'fs' },
   { name: 'kitchen-chair', out: D('kitchen-chair'), draw: kitchenChair, dither: 'fs' },
@@ -321,4 +373,7 @@ export default [
   { name: 'soda-bottle', out: D('soda-bottle'), draw: sodaBottle, dither: 'fs' },
   { name: 'bones', out: D('bones'), draw: bones, dither: 'fs' },
   { name: 'puddle', out: D('puddle'), draw: puddleDecor, dither: 'fs' },
+  { name: 'pallet', out: D('pallet'), draw: pallet, dither: 'fs' },
+  { name: 'forklift', out: D('forklift'), draw: forklift, dither: 'fs' },
+  { name: 'traffic-cone', out: D('traffic-cone'), draw: trafficCone, dither: 'fs' },
 ];

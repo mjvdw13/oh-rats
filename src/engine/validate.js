@@ -200,6 +200,8 @@ export function validateContent(reg) {
   if (reg.episodes.size === 0) err('No episodes defined');
   for (const ep of reg.episodes.values()) {
     for (const id of ep.levels) if (!reg.levels.has(id)) err(`Episode "${ep.id}": unknown level "${id}"`);
+    if (ep.intermission && !reg.images.has(ep.intermission)) err(`Episode "${ep.id}": unknown intermission image "${ep.intermission}"`);
+    for (const id of Object.keys(ep.map?.spots ?? {})) if (!ep.levels.includes(id)) warn(`Episode "${ep.id}": map spot for "${id}", which isn't one of its levels`);
   }
   for (const f of ['small', 'big', 'hud', 'tiny']) if (!reg.fonts.has(f)) err(`Missing font "${f}"`);
   for (const c of reg.cheats) if (typeof c.run !== 'function') err(`Cheat "${c.code}" has no run()`);

@@ -13,6 +13,10 @@ const STATIC = [
   'concrete', 'concrete-dark', 'concrete-stripe', 'pipes',
   // Vents
   'vent-wall', 'vent-ceiling',
+  // The warehouse (episode 2)
+  'corrugated', 'cinderblock', 'rack-boxes', 'crates', 'dock-door', 'warehouse-floor', 'floor-stripe', 'asphalt',
+  'roof-truss', 'skylight', 'mouse-hole-block', 'mouse-hole-block-on', 'door-metal-blue', 'door-metal-yellow',
+  'door-metal-red',
   // Doors, switches and the mouse-hole exit
   'door-white', 'door-wood', 'door-blue', 'door-yellow', 'door-red', 'door-closet', 'door-metal', 'door-jamb',
   'vent-cover', 'light-switch', 'light-switch-on', 'mouse-hole', 'mouse-hole-on',

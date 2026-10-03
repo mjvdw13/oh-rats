@@ -33,6 +33,9 @@ ULTRA ZOMBIE!
 
 **The house (episode 1):** E1M1 The Basement, E1M2 The Kitchen, E1M3 The Living
 Room, E1M4 Upstairs (the floor is lava!) and E1M5 The Attic (Dad). Find the **mouse hole** to leave each floor.
+
+**The warehouse (episode 2, being built):** E2M1 The Loading Dock. More
+warehouse levels are on the way.
 Doors with a blue, yellow or red stripe need that key. Vent covers open like
 doors, and the vents hide shortcuts and secrets.
 
@@ -96,6 +99,8 @@ The level files in `src/content/levels/` are plain ASCII maps and can be edited
 by hand. They were laid out with `tools/levels/e1m*.py` (Python 3, no extra
 packages): edit a script and run `python tools/levels/e1m2.py` to rewrite that
 level. If you hand-edit a level file, don't re-run its script afterwards.
+The warehouse levels (`tools/levels/e2m*.py`) share their own legend from
+`tools/levels/warehouse.py`.
 
 ## Development
 

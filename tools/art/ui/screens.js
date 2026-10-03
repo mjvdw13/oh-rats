@@ -1,5 +1,5 @@
-// Full-screen pictures (320x200): the title screen, the intermission map (a
-// dollhouse cut-away of the house), the finale text backdrop and the end
+// Full-screen pictures (320x200): the title screen, the intermission maps (a
+// dollhouse cut-away of the house, and one of the warehouse), the finale text backdrop and the end
 // picture. Painted with the same clay renderer as the sprites, then dithered
 // into the palette.
 import { PixelCanvas, mix, lighten } from '../lib/canvas.js';
@@ -381,6 +381,97 @@ function intermission() {
 }
 
 // ---------------------------------------------------------------------------
+// Episode 2's intermission: a cut-away of the warehouse. The loading dock, the
+// aisles and the big freezer downstairs; the conveyor belts and the manager's
+// office upstairs; a delivery truck backed up to the dock.
+
+/** Map spots for the warehouse levels (E2M2..E2M5 are planned; see TODO.md). */
+export const MAP_SPOTS_E2 = { e2m1: [72, 150], e2m2: [160, 150], e2m3: [248, 150], e2m4: [104, 90], e2m5: [234, 90] };
+
+function intermissionWarehouse() {
+  const c = new PixelCanvas(W, H);
+  const seed = seedFrom('intermission-e2');
+  daySky(c, seed, 178);
+  // The parking lot.
+  for (let y = 178; y < H; y++) for (let x = 0; x < W; x++) c.set(x, y, C('gray', 0.3 + hash2(x, y, seed) * 0.06));
+  for (let x = 4; x < W; x += 24) c.rect(x, 188, 12, 2, C('yellow', 0.8));
+  // The building: corrugated blue walls with a sawtooth roof.
+  const x0 = 30;
+  const x1 = 290;
+  for (let y = 52; y < 178; y++) for (let x = x0; x < x1; x++) c.set(x, y, C('sky', x % 6 < 3 ? 0.48 : 0.42));
+  for (let x = x0; x < x1; x += 52) c.poly([[x, 52], [x + 52, 52], [x + 52, 30], [x + 40, 30]], C('steel', 0.45));
+  for (let x = x0; x < x1; x += 52) c.rect(x + 41, 32, 10, 18, G('tube', 0)); // skylights
+  c.rect(x0 - 4, 50, x1 - x0 + 8, 3, C('steel', 0.3));
+  const room = (x, y, w, h, wall, floor) => {
+    c.rect(x, y, w, h, wall);
+    c.rect(x, y + h - 4, w, 4, floor);
+    c.frame(x - 2, y - 2, w + 4, h + 4, C('beige', 0.95));
+    c.frame(x - 1, y - 1, w + 2, h + 2, C('steel', 0.25));
+  };
+  room(36, 120, 74, 52, C('beige', 0.8), C('concrete', 0.55)); // the loading dock
+  room(118, 120, 86, 52, C('beige', 0.86), C('concrete', 0.6)); // the aisles
+  room(212, 120, 72, 52, C('sky', 0.85), C('sky', 0.95)); // the big freezer
+  room(36, 64, 140, 46, C('concrete', 0.72), C('steel', 0.4)); // conveyor belts
+  room(184, 64, 100, 46, C('wood', 0.6), C('blood', 0.45)); // the manager's office
+  // The dock: a roll-up door and a truck backed up to it.
+  c.rect(38, 136, 18, 32, C('gray', 0.85));
+  for (let y = 138; y < 168; y += 4) c.rect(38, y, 18, 1, C('gray', 0.6));
+  c.rect(0, 130, 34, 34, C('beige', 0.98)); // the trailer
+  c.rect(0, 130, 34, 2, C('blood', 0.55));
+  tinyText(c, 'CHEESE', 4, 142, C('blood', 0.55));
+  c.ellipse(10, 168, 6, 6, C('gray', 0.12));
+  c.ellipse(26, 168, 6, 6, C('gray', 0.12));
+  c.rect(78, 152, 18, 4, C('wood', 0.55)); // a pallet
+  c.rect(80, 142, 14, 10, C('wood', 0.62));
+  // The aisles: pallet racks of boxes.
+  for (const x of [124, 150, 176]) {
+    c.rect(x, 126, 2, 42, C('orange', 0.6));
+    c.rect(x + 20, 126, 2, 42, C('orange', 0.6));
+    for (const y of [138, 154]) {
+      c.rect(x, y, 22, 2, C('sky', 0.45));
+      c.rect(x + 3, y - 9, 7, 9, C('wood', 0.62));
+      c.rect(x + 11, y - 7, 8, 7, C('wood', 0.55));
+    }
+  }
+  // The freezer: icicles and blocks of cheese on ice.
+  for (let x = 214; x < 282; x += 5) c.poly([[x, 120], [x + 3, 120], [x + 1.5, 126 + (x % 3) * 2]], C('gray', 0.98));
+  for (const [x, y] of [[226, 156], [244, 160], [262, 154]]) {
+    c.rect(x, y, 12, 8, C('yellow', 0.8));
+    c.rect(x, y, 12, 2, C('yellow', 0.95));
+  }
+  // Conveyor belts carrying boxes, and the office's desk and window.
+  for (const y of [84, 100]) {
+    c.rect(42, y, 128, 3, C('gray', 0.25));
+    for (let x = 44; x < 168; x += 6) c.set(x, y + 1, C('gray', 0.6));
+    for (let x = 50; x < 166; x += 22) c.rect(x, y - 7, 9, 7, C('wood', 0.62));
+  }
+  c.rect(250, 70, 26, 16, C('sky', 0.7)); // window
+  c.frame(250, 70, 26, 16, C('beige', 0.95));
+  c.rect(196, 92, 34, 6, C('wood', 0.4)); // desk
+  c.rect(212, 84, 8, 8, G('cyan', 0.6)); // computer
+  // Vents along the roof, down the side, and between the floors.
+  const duct = (pts) => {
+    for (let i = 0; i + 1 < pts.length; i++) {
+      const [ax, ay] = pts[i];
+      const [bx, by] = pts[i + 1];
+      for (let t = 0; t <= 1; t += 0.01) c.rect(Math.round(ax + (bx - ax) * t) - 1, Math.round(ay + (by - ay) * t) - 1, 3, 3, C('steel', 0.7));
+    }
+  };
+  duct([[286, 166], [296, 166], [296, 72], [286, 72]]);
+  duct([[114, 160], [114, 116], [140, 116]]);
+  duct([[180, 106], [180, 58], [240, 58]]);
+  // Labels.
+  tinyText(c, 'LOADING DOCK', 50, 122, C('gray', 0.25));
+  tinyText(c, 'THE AISLES', 142, 122, C('gray', 0.25));
+  tinyText(c, 'BIG FREEZER', 226, 130, C('navy', 0.6));
+  tinyText(c, 'CONVEYOR BELTS', 76, 66, C('gray', 0.2));
+  tinyText(c, 'OFFICE', 222, 66, C('beige', 0.95));
+  // Soften the middle so the tally text reads.
+  c.eachOpaque((x, y, p) => mix(p, [20, 30, 60], 0.25 * (1 - Math.min(1, Math.hypot((x - 160) / 160, (y - 100) / 100)))));
+  return c;
+}
+
+// ---------------------------------------------------------------------------
 // Finale: a soft backdrop for the text crawl, and the end picture.
 
 function finaleBackdrop() {
@@ -455,6 +546,7 @@ function finaleEnd() {
 export default [
   { name: 'title', out: U('title'), draw: title, dither: 'fs' },
   { name: 'intermission', out: U('intermission'), draw: intermission, dither: 'fs' },
+  { name: 'intermission-e2', out: U('intermission-e2'), draw: intermissionWarehouse, dither: 'fs' },
   { name: 'finale-bg', out: U('finale-bg'), draw: finaleBackdrop, dither: 'fs' },
   { name: 'finale-end', out: U('finale-end'), draw: finaleEnd, dither: 'fs' },
 ];

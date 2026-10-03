@@ -1,7 +1,7 @@
 # TODO: handoff
 
 State as of 2026-10-03: *Raccoon Alex* has been repurposed into *Oh, Rats!*. The
-game boots and plays from the title screen to the finale. `npm test` (48 tests)
+game boots and plays from the title screen to the finale. `npm test` (52 tests)
 and `npm run validate` (0 errors, 0 warnings) both pass. All art is regenerated
 from `tools/art/`.
 
@@ -30,6 +30,7 @@ from `tools/art/`.
   - Dad: throws mousetraps; when angry he speeds up and stomps rats out of the
     vents
 - New sounds, new major-key music and all new text.
+- Episode 2 (the warehouse) has started: see *Still to do*.
 - Five levels: E1M1 The Basement, E1M2 The Kitchen, E1M3 The Living Room,
   E1M4 Upstairs (the playroom floor is lava) and E1M5 The Attic (Dad). They're built by `tools/levels/e1m*.py`.
 - Small, generic engine additions:
@@ -42,10 +43,30 @@ from `tools/art/`.
 
 ## Still to do
 
-1. **A second episode in a warehouse.** Not started yet. It needs warehouse
-   textures (`tools/art/textures/`), a new episode in
-   `src/content/levels/index.js` with its own intermission picture, and
-   level scripts like `tools/levels/e2m1.py`.
+1. **Episode 2, the warehouse: keep building it.** Started 2026-10-03:
+   - done: warehouse textures (`tools/art/textures/warehouse.js`: corrugated
+     steel, cinder block, pallet racks, crates, a roll-up dock door, concrete
+     with a lane line, asphalt, roof trusses, skylights, a cinder-block mouse
+     hole) and steel key doors (`door-metal-blue/yellow/red` in `doors.js`);
+     props (pallet, forklift, traffic cone) with no glyph of their own; a
+     `warehouse` song; the episode in `src/content/levels/index.js` with its
+     own intermission picture (`intermission-e2`, a cut-away of the warehouse,
+     drawn in `tools/art/ui/screens.js`) and a "TO BE CONTINUED" finale;
+     **E2M1 The Loading Dock** (`tools/levels/e2m1.py`).
+   - The engine change: an episode's `intermission` names its picture.
+   - The warehouse levels share `tools/levels/warehouse.py` (their legend and
+     the prop glyphs P, F, C), since every shared glyph is taken.
+   - Next: E2M2 The Aisles, E2M3 The Big Freezer, E2M4 The Conveyor Belts,
+     E2M5 The Manager's Office. Each one gets added to the episode's `levels`
+     and `map.spots` (the planned spots are in the comment there and in
+     `MAP_SPOTS_E2`).
+   - Needs art for those: freezer walls and ice, conveyor belts, office
+     walls, maybe a "the floor is a conveyor belt" floor.
+   - Who's the episode 2 boss? Ask the son (the cat from episode 1's ending?).
+     When the episode is finished, replace `strings.finale2` and its end
+     picture (it borrows `intermission-e2` for now).
+   - E2M1 is unplayed: check its difficulty (35 rats on skill 3, and you start
+     with only the Bone Shotgun) and the big, open yard.
 2. **Polish the attic boss fight** in play. It's small: Dad, 7 rats, the Mega
    Microwave by the door. Tune Dad's health (2500), the mousetrap damage and
    the stomp timer after playtesting with the son.

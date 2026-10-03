@@ -86,6 +86,7 @@ export default {
   ],
 
   episodeName: 'THE BIG HOUSE',
+  episode2Name: 'THE WAREHOUSE',
 
   finale:
     'With one last mighty stomp, Dad wobbles, spins around three times... and flops down flat on the ' +
@@ -99,4 +100,13 @@ export default {
     'You climb up onto the biggest wheel of cheese in the house and take a big bite.\n\n' +
     'Long live the Zombie Rat!\n\n' +
     '...but what was that noise downstairs? It sounded like... a CAT?',
+
+  // Episode 2 is still being built: only E2M1 exists, so for now its finale
+  // is a "to be continued".
+  finale2:
+    'You squeeze through the mouse hole and out of the loading dock.\n\n' +
+    'Behind you, the forklift beeps. In front of you: aisle after aisle of boxes, stacked up to the ' +
+    'roof. Somewhere in there, something smells like a LOT of cheese.\n\n' +
+    'And something else is in here too. Something with whiskers. Big whiskers.\n\n' +
+    'TO BE CONTINUED...',
 };

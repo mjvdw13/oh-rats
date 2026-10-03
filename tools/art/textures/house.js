@@ -426,10 +426,15 @@ function lightSwitch(name, on) {
 }
 
 /** The level exit: a mouse hole in the skirting board with a sign above it. */
-function mouseHole(name, on) {
-  const { c } = paper(name, C('beige', 0.88));
-  crown(c);
-  baseboard(c, C('beige', 0.92), 14);
+/** The exit. `wall(name)` draws a different wall around the hole (the warehouse uses cinder blocks). */
+function mouseHole(name, on, wall) {
+  let c;
+  if (wall) c = wall(name);
+  else {
+    c = paper(name, C('beige', 0.88)).c;
+    crown(c);
+    baseboard(c, C('beige', 0.92), 14);
+  }
   // The arched hole.
   for (let y = 36; y < 64; y++) {
     for (let x = 18; x < 46; x++) {
@@ -673,4 +678,4 @@ export default [
   { name: 'joists', out: T('joists'), draw: joists },
 ];
 
-export { baseboard, crown, paper };
+export { baseboard, crown, paper, mouseHole };

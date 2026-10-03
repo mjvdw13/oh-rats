@@ -85,7 +85,7 @@ export class IntermissionScene {
     const s = g.surface;
     const pal = g.palette;
     s.clear(0);
-    const bg = g.assets.image('intermission');
+    const bg = g.assets.image(this.info.episode?.intermission ?? 'intermission');
     if (bg) s.blit(bg, 0, 0);
     const big = g.font('big');
     const gold = g.font('gold') ?? big;

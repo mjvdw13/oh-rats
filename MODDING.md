@@ -388,13 +388,15 @@ Tips from the built-in maps:
 ### Episodes
 
 `src/content/levels/index.js` defines the episodes:
-`defineEpisode({ id, name, levels: [...], map, finale: { text, background, endImage, endText, music } })`.
+`defineEpisode({ id, name, levels: [...], intermission, map, finale: { text, background, endImage, endText, music } })`.
 If there is more than one episode, the menu asks which one to play.
 
-`map: { spots: { e1m1: [82, 34], ... } }` places each level on the
-intermission picture (`assets/ui/intermission.png`, 320×200). Between levels,
-finished levels are crossed out and a blinking "YOU ARE HERE" marks the next
-one.
+`intermission` is the id of the picture behind the level-finished screen
+(any image in `src/content/ui.js`, 320×200). It defaults to `'intermission'`
+(`assets/ui/intermission.png`, the house); the warehouse episode uses
+`'intermission-e2'`. `map: { spots: { e1m1: [82, 34], ... } }` places each
+level on that picture. Between levels, finished levels are crossed out and a
+blinking "YOU ARE HERE" marks the next one.
 
 ## Textures
 

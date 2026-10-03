@@ -379,7 +379,9 @@ export function defineLevel(def) {
 
 /**
  * An episode: an ordered list of level ids plus an optional finale.
- * @param {{id:string, name:string, levels:string[], finale?:object}} def
+ * `intermission` names the image behind the level-finished screen (default
+ * 'intermission'); `map.spots` puts each level on that picture.
+ * @param {{id:string, name:string, levels:string[], intermission?:string, map?:object, finale?:object}} def
  */
 export function defineEpisode(def) {
   requireId(def, 'Episode');

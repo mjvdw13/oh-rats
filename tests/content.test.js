@@ -15,6 +15,20 @@ test('the episode lists every level once, in order', () => {
   assert.ok(ep.finale?.text);
 });
 
+test('every level is in exactly one episode', () => {
+  const episodes = [...registry.episodes.values()];
+  for (const id of registry.levels.keys()) {
+    assert.equal(episodes.filter((e) => e.levels.includes(id)).length, 1, id);
+  }
+});
+
+test('the warehouse episode has its own intermission picture', () => {
+  const ep = registry.episodes.get('e2');
+  assert.equal(ep.levels[0], 'e2m1');
+  assert.ok(registry.images.has(ep.intermission));
+  assert.ok(ep.levels.every((id) => ep.map.spots[id]), 'every level has a spot on the picture');
+});
+
 for (const level of registry.levels.values()) {
   test(`${level.id}: exit, keys and secrets are reachable on every skill`, () => {
     for (const skill of [1, 3, 5]) {

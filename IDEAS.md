@@ -32,6 +32,9 @@ where each one lives in the game. Add new ideas to the bottom!
 - The zombie rat doesn't have a name yet. What should it be called?
 - The playroom upstairs has a "the floor is LAVA" floor. Rain boots let you walk on it.
 - The ending hints at a sequel: "...was that a CAT?"
+- Episode 2 is a warehouse. The zombie rat falls asleep in a cardboard box and
+  wakes up in a delivery truck parked at the loading dock. Who's the boss of
+  the warehouse? Maybe that cat?
 
 ## New ideas
 

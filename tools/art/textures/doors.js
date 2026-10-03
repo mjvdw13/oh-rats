@@ -1,5 +1,5 @@
 // Doors and door frames: painted panel doors, a louvred closet door, the
-// basement's steel door, and doors with a coloured stripe that need a key.
+// basement's steel door, and doors (house panels, warehouse steel) with a coloured stripe that need a key.
 import { texture, noiseFill, bevel, rivet, tinyText, tinyTextWidth, C, mix, lighten, hash2 } from '../lib/tex.js';
 
 const T = (name) => `assets/textures/${name}.png`;
@@ -15,23 +15,25 @@ function panelDoor(name, col, { stripe } = {}) {
       bevel(c, x + 2, y + 2, 18, h - 4, col, { depth: 1, fill: false, hi: -0.15, lo: -0.2 });
     }
   }
-  if (stripe) {
-    // A bright band and a big key symbol: this door needs that key.
-    const band = C(stripe.ramp, 0.62);
-    c.rect(0, 26, 64, 10, band);
-    c.rect(0, 26, 64, 1, lighten(band, 0.3));
-    c.rect(0, 35, 64, 1, mix(band, [0, 0, 0], 0.3));
-    const w = tinyTextWidth(stripe.label);
-    tinyText(c, stripe.label, 32 - Math.ceil(w / 2), 29, C('beige', 0.98));
-    c.ellipse(12, 31, 2.5, 2.5, C('beige', 0.98));
-    c.rect(14, 30, 5, 2, C('beige', 0.98));
-    c.rect(17, 32, 1, 2, C('beige', 0.98));
-  }
+  if (stripe) keyStripe(c, stripe);
   // Knob and keyhole.
   c.ellipse(55, 34, 2.6, 2.6, C('yellow', 0.62));
   c.set(54, 33, C('yellow', 0.95));
   c.rect(55, 38, 1, 2, C('gray', 0.12));
   return c;
+}
+
+/** A bright band and a big key symbol: this door needs that key. */
+function keyStripe(c, stripe) {
+  const band = C(stripe.ramp, 0.62);
+  c.rect(0, 26, 64, 10, band);
+  c.rect(0, 26, 64, 1, lighten(band, 0.3));
+  c.rect(0, 35, 64, 1, mix(band, [0, 0, 0], 0.3));
+  const w = tinyTextWidth(stripe.label);
+  tinyText(c, stripe.label, 32 - Math.ceil(w / 2), 29, C('beige', 0.98));
+  c.ellipse(12, 31, 2.5, 2.5, C('beige', 0.98));
+  c.rect(14, 30, 5, 2, C('beige', 0.98));
+  c.rect(17, 32, 1, 2, C('beige', 0.98));
 }
 
 function closetDoor() {
@@ -49,8 +51,9 @@ function closetDoor() {
   return c;
 }
 
-function metalDoor() {
-  const { c, seed } = texture('door-metal');
+/** A steel door; with a `stripe` it's a key door (the warehouse's). */
+function metalDoor(name = 'door-metal', { stripe } = {}) {
+  const { c, seed } = texture(name);
   noiseFill(c, seed, C('steel', 0.5), C('steel', 0.58), { cells: 2, grain: 0.05 });
   bevel(c, 0, 0, 64, 64, C('steel', 0.5), { depth: 2, fill: false });
   bevel(c, 8, 8, 48, 20, C('steel', 0.48), { depth: 1 });
@@ -58,6 +61,7 @@ function metalDoor() {
   c.rect(6, 30, 52, 3, C('steel', 0.8));
   c.rect(6, 33, 52, 1, C('steel', 0.3));
   for (const [x, y] of [[4, 4], [58, 4], [4, 58], [58, 58]]) rivet(c, x, y, C('steel', 0.6));
+  if (stripe) keyStripe(c, stripe);
   return c;
 }
 
@@ -80,6 +84,9 @@ export default [
   { name: 'door-yellow', out: T('door-yellow'), draw: () => panelDoor('door-yellow', C('beige', 0.9), { stripe: { ramp: 'yellow', label: 'YELLOW' } }) },
   { name: 'door-red', out: T('door-red'), draw: () => panelDoor('door-red', C('beige', 0.9), { stripe: { ramp: 'blood', label: 'RED' } }) },
   { name: 'door-closet', out: T('door-closet'), draw: closetDoor },
-  { name: 'door-metal', out: T('door-metal'), draw: metalDoor },
+  { name: 'door-metal', out: T('door-metal'), draw: () => metalDoor() },
+  { name: 'door-metal-blue', out: T('door-metal-blue'), draw: () => metalDoor('door-metal-blue', { stripe: { ramp: 'sky', label: 'BLUE' } }) },
+  { name: 'door-metal-yellow', out: T('door-metal-yellow'), draw: () => metalDoor('door-metal-yellow', { stripe: { ramp: 'yellow', label: 'YELLOW' } }) },
+  { name: 'door-metal-red', out: T('door-metal-red'), draw: () => metalDoor('door-metal-red', { stripe: { ramp: 'blood', label: 'RED' } }) },
   { name: 'door-jamb', out: T('door-jamb'), draw: jamb },
 ];

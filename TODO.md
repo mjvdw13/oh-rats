@@ -65,10 +65,8 @@ from `tools/art/`. Nothing here is a git repository yet.
 6. **Screenshots** for the README (`docs/screenshots/` was removed with the
    old ones), and the `og:image` link preview in `index.html` points at
    `docs/screenshots/title.jpg`.
-7. **Hosting**: `index.html` assumes `https://mjvdw13.github.io/oh-rats/`.
-   Create the repo, then follow the GitHub Pages steps from the Raccoon Alex
-   README. The smoke test (`npm run smoke`, needs Playwright) serves under
-   `/oh-rats/`.
+7. **Hosting**: done. Pushes to `main` deploy to
+   https://mjvdw13.github.io/oh-rats/ through `.github/workflows/ci.yml`.
 8. Art polish ideas: the Slingshot Rat's slingshot is hard to see, the Chonky
    Rat's roll-over frames are a little abrupt, and the finale picture could use
    the rat's whole body instead of a big head on a cheese wheel.

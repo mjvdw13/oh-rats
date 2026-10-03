@@ -109,6 +109,11 @@ node tools/mapview.mjs e1m2        # draw a level map to tools/art/out/maps/
 npm run smoke        # browser smoke test (needs Playwright, see the file)
 ```
 
+On every push, GitHub Actions (`.github/workflows/ci.yml`) runs the tests, the
+validator and the smoke test. Pushes to `main` that pass the tests and the
+validator are published to GitHub Pages at https://mjvdw13.github.io/oh-rats/
+(Settings → Pages → Source: **GitHub Actions**).
+
 ## How it works
 
 - A 320×200 framebuffer of palette indices (a 320×168 view plus a 32-pixel

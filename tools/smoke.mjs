@@ -105,11 +105,12 @@ const check = (cond, what) => {
   await p.keyboard.up('KeyW');
   await p.keyboard.press('KeyE');
   await p.keyboard.down('KeyF');
-  await p.waitForTimeout(1500);
+  await p.waitForTimeout(1000);
+  // (Not "ammo went down": the starting weapon may have infinite ammo.)
+  const firing = await p.evaluate(() => window.game.scene.world.player.player.weaponState.state);
+  await p.waitForTimeout(500);
   await p.keyboard.up('KeyF');
-  const ammo = await p.evaluate(() => window.game.scene.world.player.player.ammo);
-  const start = new Registry(content).hero.startAmmo ?? {};
-  check(Object.entries(start).some(([k, v]) => ammo[k] < v), 'firing uses ammo');
+  check(firing === 'fire', 'holding fire fires the weapon');
   await shot(p, 'playing');
   await p.keyboard.press('Tab');
   await p.waitForTimeout(300);

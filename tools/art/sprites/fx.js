@@ -1,13 +1,13 @@
 // Effects and projectiles: dust puffs, fur tufts, zombie goo, fizzy
 // explosions, sparkly pop-in dust, spitballs, mousetraps, junk balls, soda
-// rockets and the Mega Microwave's blast. Glowing bits use fullbright colours.
+// rockets, the Mega Microwave's blast, marbles, flares and blow torch flames. Glowing bits use fullbright colours.
 import { PixelCanvas } from '../lib/canvas.js';
 import { C, G } from '../lib/pal.js';
 import { Model, MAT } from '../lib/model.js';
 import { sheet, flash } from '../lib/sprite.js';
 import { fbm, hash2, rng } from '../lib/noise.js';
 import { mousetrap } from './dad.js';
-import { can } from './items.js';
+import { can, marble } from './items.js';
 
 const F = (name) => `assets/sprites/fx/${name}.png`;
 const RENDER = { light: [-0.5, -0.65, 0.58], ambient: 0.38, aoStrength: 0.4 };
@@ -207,6 +207,68 @@ function microwaveBlast() {
   return sheet([...fly, ...explosion(64, ZAP, 151, 5)]);
 }
 
+/** The Slingshot's marble: a spinning glass marble, then a plink of glints. */
+function marbleShot() {
+  const fly = [0, 1].map((f) => {
+    const m = new Model(16, 16, { seed: 171 });
+    marble(m, 8, 8, 0, 3.4, f * 2);
+    return m.render(RENDER);
+  });
+  const plink = [0, 1, 2].map((f) => {
+    const c = new PixelCanvas(16, 16);
+    const r = rng(173 + f);
+    for (let k = 0; k < 8 - f * 2; k++) {
+      const a = r.range(0, Math.PI * 2);
+      const d = 1 + f * 2 + r.range(0, 2);
+      c.set(8 + Math.cos(a) * d, 8 + Math.sin(a) * d, r.chance(0.5) ? G('pale', 1) : C('sky', 0.85));
+    }
+    return c;
+  });
+  return sheet([...fly, ...plink]);
+}
+
+// Flare: a hot red fizz with white sparks.
+const FLARE = [[255, 255, 255], G('pale', 1), G('red', 1), G('red', 0.5), G('magenta', 0.5), G('red', 0)];
+
+function flareShot() {
+  const fly = [0, 1].map((f) => {
+    const c = new PixelCanvas(48, 48);
+    fireBlob(c, 24, 24, 5 + f, 180 + f, FLARE, { holes: 0.2 });
+    const r = rng(182 + f);
+    for (let k = 0; k < 10; k++) c.set(24 + r.range(-9, 9), 24 + r.range(-8, 8), r.chance(0.5) ? G('pale', 1) : G('yellow', 0.85));
+    return c;
+  });
+  const burst = explosion(48, FLARE, 185, 4).map((c, f) => {
+    // Sparks flying out of the burst.
+    const r = rng(190 + f);
+    for (let k = 0; k < 24; k++) {
+      const a = r.range(0, Math.PI * 2);
+      const d = r.range(6, 10 + f * 4);
+      c.set(24 + Math.cos(a) * d, 28 + Math.sin(a) * d, r.chance(0.5) ? G('pale', 1) : G('yellow', 0.85));
+    }
+    return c;
+  });
+  return sheet([...fly, ...burst]);
+}
+
+// Blow Torch flame: blue at the core, licking out yellow.
+const TORCH = [[255, 255, 255], G('cyan', 1), G('pale', 1), G('yellow', 0.7), G('yellow', 0.35), G('yellow', 0), G('red', 0.5)];
+
+function torchFlame() {
+  const fly = [0, 1, 2].map((f) => {
+    const c = new PixelCanvas(32, 32);
+    fireBlob(c, 16, 16, 5 + f * 3, 200 + f, TORCH.slice(f), { holes: 0.15 + f * 0.1 });
+    return c;
+  });
+  const out = [0, 1].map((f) => {
+    const c = new PixelCanvas(32, 32);
+    fireBlob(c, 16, 15 - f * 2, 6 - f * 2, 210 + f, TORCH.slice(3), { holes: 0.4 });
+    smoke(c, 16, 12 - f * 3, 4 + f * 2, 215 + f, 0.6);
+    return c;
+  });
+  return sheet([...fly, ...out]);
+}
+
 export default [
   { name: 'puff', out: F('puff'), draw: puff },
   { name: 'fluff', out: F('fluff'), draw: fluff },
@@ -218,6 +280,9 @@ export default [
   { name: 'junk-ball', out: F('junk-ball'), draw: junkBall, dither: 'fs' },
   { name: 'soda-rocket', out: F('soda-rocket'), draw: sodaRocket },
   { name: 'microwave-blast', out: F('microwave-blast'), draw: microwaveBlast },
+  { name: 'marble', out: F('marble'), draw: marbleShot, dither: 'fs' },
+  { name: 'flare', out: F('flare'), draw: flareShot },
+  { name: 'torch-flame', out: F('torch-flame'), draw: torchFlame },
 ];
 
 export { fireBlob, smoke, FIRE, FIZZ, ZAP };

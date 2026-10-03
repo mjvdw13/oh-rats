@@ -116,6 +116,10 @@ L.put(44, 27, '$')
 L.put(35, 25, 'p')
 L.put(47, 30, 'S')
 L.puts(',', (38, 18), (39, 18), (41, 18))
+# The slingshot in the laundry room, the crowbar on the workbench, marbles.
+L.put(25, 5, '2')
+L.puts('M', (27, 5), (23, 9), (44, 14), (44, 19))
+L.put(28, 19, '1')
 
 legend = {
     'q': {'door': 'concrete', 'secret': True},

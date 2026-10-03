@@ -11,6 +11,7 @@ export default defineWeapon({
   ammoPerShot: 40,
   priority: 6,
   flashLight: 2,
+  offset: [0, 18],
   sheet: { src: 'assets/sprites/weapons/mega-microwave.png', frameWidth: 128, frameHeight: 96 },
   anims: {
     idle: { frames: [0, 1], fps: 3, loop: true },

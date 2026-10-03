@@ -11,7 +11,7 @@ test('the content pack validates without errors', () => {
 
 test('the episode lists every level once, in order', () => {
   const ep = registry.firstEpisode();
-  assert.deepEqual(ep.levels, ['e1m1', 'e1m2', 'e1m3', 'e1m4']);
+  assert.deepEqual(ep.levels, ['e1m1', 'e1m2', 'e1m3', 'e1m4', 'e1m5']);
   assert.ok(ep.finale?.text);
 });
 
@@ -57,7 +57,7 @@ for (const level of registry.levels.values()) {
 }
 
 test('beating Dad rolls the finale', () => {
-  const w = makeWorld('e1m4');
+  const w = makeWorld('e1m5');
   const dad = w.things.find((t) => t.def.id === 'dad');
   w.damage(dad, 99999, w.player, w.player);
   assert.equal(w.exitRequested, 'finale');

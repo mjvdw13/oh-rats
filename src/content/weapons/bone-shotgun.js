@@ -9,6 +9,7 @@ export default defineWeapon({
   ammo: null, // infinite ammo
   priority: 2,
   flashLight: 1,
+  offset: [0, 18],
   sheet: { src: 'assets/sprites/weapons/bone-shotgun.png', frameWidth: 128, frameHeight: 96 },
   anims: {
     idle: [0],

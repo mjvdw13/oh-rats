@@ -1,9 +1,9 @@
 # TODO: handoff
 
 State as of 2026-10-03: *Raccoon Alex* has been repurposed into *Oh, Rats!*. The
-game boots and plays from the title screen to the finale. `npm test` (44 tests)
+game boots and plays from the title screen to the finale. `npm test` (48 tests)
 and `npm run validate` (0 errors, 0 warnings) both pass. All art is regenerated
-from `tools/art/`. Nothing here is a git repository yet.
+from `tools/art/`.
 
 ## Done
 
@@ -19,13 +19,19 @@ from `tools/art/`. Nothing here is a git repository yet.
     and finale
 - Content:
   - the zombie-rat hero, starting with the Bone Shotgun (no ammo type = infinite)
-  - weapons: the Rubber Band Gatling, the Soda Bazooka and the Mega Microwave
+  - weapons: the Crowbar (slot 1, with the claws), the Slingshot (slot 2, with
+    the shotgun; marbles), the Rubber Band Gatling, the Soda Bazooka, the Mega
+    Microwave, the Flare Gun (6; flares) and the Blow Torch (7; propane)
+  - held weapons sit 18px lower (`offset` in each weapon file) so the paws
+    barely show. The claws are the exception, since the paws are the weapon.
+  - the HUD's ammo tally switches to two columns when there are more than
+    four ammo types (`src/engine/ui/hud.js`)
   - rats: House, Slingshot, Spitball, Chonky, Ninja and Pack
   - Dad: throws mousetraps; when angry he speeds up and stomps rats out of the
     vents
 - New sounds, new major-key music and all new text.
-- Four levels: E1M1 The Basement, E1M2 The Kitchen, E1M3 The Living Room and
-  E1M4 The Attic (Dad). They're built by `tools/levels/e1m*.py`.
+- Five levels: E1M1 The Basement, E1M2 The Kitchen, E1M3 The Living Room,
+  E1M4 Upstairs (the playroom floor is lava) and E1M5 The Attic (Dad). They're built by `tools/levels/e1m*.py`.
 - Small, generic engine additions:
   - `monster.speedMul` (`src/engine/things/monster.js`)
   - `strings.hud.infiniteAmmo` shows ∞ for ranged weapons without ammo
@@ -36,17 +42,10 @@ from `tools/art/`. Nothing here is a git repository yet.
 
 ## Still to do
 
-1. **An UPSTAIRS level** (kids' bedrooms, the playroom where *the floor is
-   LAVA*, the bathroom). It goes between the living room and the attic. The
-   art is ready (`wallpaper-pink`, `wallpaper-kids`, `playmat`, `lava` (`~`),
-   teddy bears, toy blocks and cars, rain boots). Steps:
-   - add `tools/levels/e1m4.py` for it
-   - rename the attic to e1m5 and update `e1m4.py` → `e1m5.py`
-   - update `src/content/levels/index.js` (the intermission spot for upstairs
-     is `[160, 86]`, the attic `[160, 42]`) and the episode list in
-     `tests/content.test.js`
-   - the `upstairs` song exists (the attic currently borrows it until the
-     fight starts)
+1. **A second episode in a warehouse.** Not started yet. It needs warehouse
+   textures (`tools/art/textures/`), a new episode in
+   `src/content/levels/index.js` with its own intermission picture, and
+   level scripts like `tools/levels/e2m1.py`.
 2. **Polish the attic boss fight** in play. It's small: Dad, 7 rats, the Mega
    Microwave by the door. Tune Dad's health (2500), the mousetrap damage and
    the stomp timer after playtesting with the son.

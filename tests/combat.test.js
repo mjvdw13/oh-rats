@@ -91,3 +91,40 @@ test('effects (puffs, fur, goo, explosions) play once and disappear', () => {
   run(w, mockInput(), 1);
   for (const e of fx) assert.ok(e.removed, `${e.def.id} is gone`);
 });
+
+test('the crowbar, slingshot, flare gun and blow torch all take down a rat', () => {
+  const close = room(['#########', '#.......#', '#.......#', '#.......#', '#########'], ['', ' > i']);
+  for (const id of ['crowbar', 'slingshot', 'flare-gun', 'blow-torch']) {
+    const w = makeWorld(close);
+    const p = w.player.player;
+    const rat = w.things.find((t) => t.kind === 'monster');
+    const def = w.registry.weapons.get(id);
+    p.god = true; // the flare's splash reaches back this close
+    p.weapons.add(id);
+    p.weapon = id;
+    if (def.ammo) p.ammo[def.ammo] = 50;
+    const input = mockInput();
+    input.hold('fire');
+    run(w, input, 4);
+    assert.ok(rat.dead, `${id}: the rat went down`);
+    if (def.ammo) assert.ok(p.ammo[def.ammo] < 50, `${id}: it used ${def.ammo}`);
+  }
+});
+
+test('weapons that share a slot take turns on its number key', () => {
+  const w = makeWorld(arena, { noMonsters: true });
+  const p = w.player.player;
+  p.weapons.add('crowbar');
+  p.weapons.add('slingshot');
+  p.ammo.marbles = 10;
+  const input = mockInput();
+  const press = (key) => {
+    input.tap(key);
+    run(w, input, 1);
+    return p.weapon;
+  };
+  assert.equal(press('weapon1'), 'crowbar', 'the crowbar comes up first');
+  assert.equal(press('weapon1'), 'claws');
+  assert.equal(press('weapon2'), 'bone-shotgun', 'the shotgun comes up first');
+  assert.equal(press('weapon2'), 'slingshot');
+});

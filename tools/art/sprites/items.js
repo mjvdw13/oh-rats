@@ -1,6 +1,6 @@
 // Pickup sprites: snacks (health), rat-sized armour, ammo, weapons, keys and
 // powerups. Every item sits on the floor and is seen from slightly above.
-import { PixelCanvas, lighten } from '../lib/canvas.js';
+import { PixelCanvas, darken, lighten } from '../lib/canvas.js';
 import { C, G } from '../lib/pal.js';
 import { Model, MAT } from '../lib/model.js';
 import { box, cylinder, ellipse, flat } from '../lib/props.js';
@@ -215,6 +215,78 @@ const lunchbox = () => {
   });
 };
 
+const MARBLE_COLS = [C('sky', 0.62), C('green', 0.62), C('blood', 0.62), C('yellow', 0.8), C('purple', 0.62)];
+
+/** A glass marble with a coloured swirl. */
+function marble(m, x, y, z, r, k) {
+  m.sphere(x, y, z, r, MARBLE_COLS[k % MARBLE_COLS.length], MAT.glass);
+  m.paint(x - r * 0.2, y + r * 0.1, r * 0.45, r * 0.25, MARBLE_COLS[(k + 2) % MARBLE_COLS.length], MAT.glass);
+}
+
+const marbles = () => {
+  const c = model(16, 16, 235, (m) => {
+    shadow(m, 8, 14.5, 5);
+    marble(m, 5, 11.5, 2, 2.6, 0);
+    marble(m, 10.5, 12, 3, 2.6, 1);
+    marble(m, 8, 8.5, 1, 2.6, 2);
+  });
+  return glint(c, 7, 7, true);
+};
+
+const marbleJar = () =>
+  model(24, 24, 237, (m) => {
+    shadow(m, 12, 22, 8);
+    // A glass jar full of marbles (drawn in front of the glass), with a red lid.
+    cylinder(m, 12, 6, 22, 7, C('sky', 0.88), { ...MAT.glass, spec: 0.9 }, { topCol: C('sky', 0.92) });
+    for (let k = 0; k < 9; k++) marble(m, 8 + (k % 3) * 4, 19 - Math.floor(k / 3) * 4 + (k % 2), 14 + (k % 3), 2.2, k);
+    cylinder(m, 12, 3, 6, 7.2, C('blood', 0.6), MAT.plastic, { topCol: C('blood', 0.7) });
+  });
+
+/** A red road flare: a stick with a white cap. */
+function flare(m, x0, y0, x1, y1, z) {
+  m.capsule(x0, y0, z, x1, y1, z, 2.2, 2.2, C('blood', 0.6), MAT.paper);
+  m.capsule(x1, y1, z + 0.2, x1 + (x1 - x0) * 0.15, y1 + (y1 - y0) * 0.15, z + 0.2, 2.3, 2.3, C('beige', 0.92), MAT.plastic);
+}
+
+const flares = () =>
+  model(24, 16, 243, (m) => {
+    shadow(m, 12, 14.5, 9);
+    flare(m, 4, 12, 17, 11, 3);
+    flare(m, 6, 8, 18, 9.5, 1);
+  });
+
+const flareBox = () =>
+  model(32, 24, 245, (m) => {
+    shadow(m, 16, 22, 13);
+    box(m, 5, 10, 22, 11, 4, C('orange', 0.62), MAT.paper, { topCol: C('orange', 0.72) });
+    m.paint(16, 16, 4, 3, C('beige', 0.95), MAT.paper);
+    m.paint(16, 16, 1.6, 1.6, C('blood', 0.6), MAT.paper); // the flare on the label
+    flare(m, 9, 9, 13, 3, 14);
+    flare(m, 19, 9, 22, 4, 14);
+  });
+
+/** A blue propane cylinder with a brass valve. */
+function propane(m, cx, top, bottom, r) {
+  m.capsule(cx, bottom - r * 0.4, 0, cx, top + r * 0.8, 0, r, r, C('sky', 0.5), { ...MAT.metal, spec: 0.35 });
+  m.paint(cx, (top + bottom) / 2 + r * 0.3, r * 0.95, r * 0.35, C('beige', 0.92), MAT.paper);
+  m.capsule(cx, top + r * 0.4, 1, cx, top - 1, 1, r * 0.35, r * 0.3, C('yellow', 0.66), MAT.brass);
+  m.ellipsoid(cx + r * 0.45, top, 2, r * 0.3, r * 0.3, r * 0.2, C('blood', 0.6), MAT.plastic);
+}
+
+const propaneCan = () =>
+  model(16, 24, 247, (m) => {
+    shadow(m, 8, 22, 5);
+    propane(m, 8, 5, 22, 4);
+  });
+
+const propaneTank = () =>
+  model(24, 32, 249, (m) => {
+    shadow(m, 12, 30, 9);
+    propane(m, 12, 6, 30, 8);
+    // A carrying collar round the valve.
+    m.capsule(6, 7, 6, 18, 7, 6, 1.2, 1.2, C('steel', 0.72), MAT.metal);
+  });
+
 // ---------------------------------------------------------------- weapon pickups (side views)
 
 function pickup(build) {
@@ -250,6 +322,54 @@ const pickupMicrowave = () => {
   c.set(20, 18, G('purple', 1));
   return c;
 };
+
+const pickupCrowbar = () =>
+  pickup((m) => {
+    m.capsule(8, 27, 6, 50, 21, 6, 2.6, 2.4, C('blood', 0.58), MAT.metal);
+    m.capsule(8, 27, 6, 4, 25, 6, 2.4, 1.4, C('steel', 0.72), MAT.metal); // the pry end
+    // The hook curling up at the far end.
+    let prev = [50, 21];
+    for (let k = 1; k <= 6; k++) {
+      const a = Math.PI / 2 - (k / 6) * Math.PI * 1.1;
+      const p = [50 + Math.cos(a) * 6, 15 + Math.sin(a) * 6];
+      m.capsule(...prev, 6, ...p, 6, 2.4, 2.2, k > 3 ? C('steel', 0.72) : C('blood', 0.58), MAT.metal);
+      prev = p;
+    }
+  });
+
+const pickupSlingshot = () =>
+  pickup((m) => {
+    const wood = C('wood', 0.5);
+    m.capsule(28, 29, 4, 31, 19, 6, 2.6, 2.4, wood, MAT.wood);
+    m.capsule(31, 19, 6, 22, 7, 6, 2.2, 1.8, wood, MAT.wood);
+    m.capsule(31, 19, 6, 40, 7, 6, 2.2, 1.8, wood, MAT.wood);
+    m.capsule(22, 7, 8, 31, 14, 9, 0.9, 0.9, C('blood', 0.48), MAT.plastic);
+    m.capsule(40, 7, 8, 31, 14, 9, 0.9, 0.9, C('blood', 0.48), MAT.plastic);
+    m.ellipsoid(31, 14.5, 10, 3, 2, 1.6, C('wood', 0.32), MAT.leather);
+    marble(m, 40, 26, 6, 2.4, 0);
+    marble(m, 45, 27, 6, 2.4, 3);
+  });
+
+const pickupFlareGun = () =>
+  pickup((m) => {
+    const orange = C('orange', 0.62);
+    m.capsule(22, 15, 6, 50, 15, 6, 6, 5.5, orange, MAT.plastic);
+    m.paint(51, 15, 2, 4.4, C('gray', 0.08));
+    m.slab([[18, 12], [26, 12], [26, 21], [18, 21]], 10, darken(orange, 0.12), MAT.plastic, { bevel: 1.5 });
+    m.capsule(21, 20, 8, 15, 29, 8, 3.6, 4, darken(orange, 0.2), MAT.plastic);
+    m.capsule(18, 11, 9, 15, 8, 9, 1.2, 1, C('gray', 0.25), MAT.metal); // the hammer
+    m.stroke(24, 22, 26, 26, 1, C('gray', 0.25)); // the trigger
+  });
+
+const pickupBlowTorch = () =>
+  pickup((m) => {
+    m.capsule(8, 22, 6, 34, 22, 6, 7, 7, C('sky', 0.5), { ...MAT.metal, spec: 0.35 });
+    m.paint(21, 22, 4, 6.8, C('beige', 0.92), MAT.paper);
+    m.ellipsoid(38, 22, 7, 4, 5, 4, C('yellow', 0.66), MAT.brass);
+    m.capsule(41, 21, 7, 56, 17, 7, 1.6, 1.4, C('steel', 0.7), MAT.metal);
+    m.capsule(56, 17, 7, 60, 16, 7, 2, 2, C('yellow', 0.66), MAT.brass);
+    m.ellipsoid(38, 15, 9, 2.2, 2.2, 1.6, C('blood', 0.6), MAT.plastic); // the valve knob
+  });
 
 // ---------------------------------------------------------------- keys and powerups
 
@@ -343,10 +463,20 @@ export default [
   { name: 'six-pack', out: I('six-pack'), draw: sixPack, dither: 'fs' },
   { name: 'batteries', out: I('batteries'), draw: batteries, dither: 'fs' },
   { name: 'battery-pack', out: I('battery-pack'), draw: batteryPack, dither: 'fs' },
+  { name: 'marbles', out: I('marbles'), draw: marbles, dither: 'fs' },
+  { name: 'marble-jar', out: I('marble-jar'), draw: marbleJar, dither: 'fs' },
+  { name: 'flares', out: I('flares'), draw: flares, dither: 'fs' },
+  { name: 'flare-box', out: I('flare-box'), draw: flareBox, dither: 'fs' },
+  { name: 'propane-can', out: I('propane-can'), draw: propaneCan, dither: 'fs' },
+  { name: 'propane-tank', out: I('propane-tank'), draw: propaneTank, dither: 'fs' },
   { name: 'lunchbox', out: I('lunchbox'), draw: lunchbox, dither: 'fs' },
   { name: 'pickup-band-gatling', out: I('pickup-band-gatling'), draw: pickupGatling, dither: 'fs' },
   { name: 'pickup-soda-bazooka', out: I('pickup-soda-bazooka'), draw: pickupBazooka, dither: 'fs' },
   { name: 'pickup-mega-microwave', out: I('pickup-mega-microwave'), draw: pickupMicrowave, dither: 'fs' },
+  { name: 'pickup-crowbar', out: I('pickup-crowbar'), draw: pickupCrowbar, dither: 'fs' },
+  { name: 'pickup-slingshot', out: I('pickup-slingshot'), draw: pickupSlingshot, dither: 'fs' },
+  { name: 'pickup-flare-gun', out: I('pickup-flare-gun'), draw: pickupFlareGun, dither: 'fs' },
+  { name: 'pickup-blow-torch', out: I('pickup-blow-torch'), draw: pickupBlowTorch, dither: 'fs' },
   { name: 'key-blue', out: I('key-blue'), draw: () => key('sky'), dither: 'fs' },
   { name: 'key-yellow', out: I('key-yellow'), draw: () => key('yellow'), dither: 'fs' },
   { name: 'key-red', out: I('key-red'), draw: () => key('blood'), dither: 'fs' },
@@ -357,4 +487,4 @@ export default [
   { name: 'blueprint', out: I('blueprint'), draw: blueprint, dither: 'fs' },
 ];
 
-export { wedge, can, battery };
+export { wedge, can, battery, marble };

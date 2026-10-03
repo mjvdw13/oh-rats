@@ -12,8 +12,8 @@ const sheet = { src: 'assets/sprites/monsters/slingshot-rat.png', frameWidth: 64
 const anims = { idle: { frames: [0, 2], durations: [1, 1], loop: true }, walk: { frames: [0, 1, 2, 3], fps: 5 }, react: { frames: [6] } };
 const friend = (id, glyph, extra) => defineNpc({ id, name: id.toUpperCase(), glyph, sheet, anims, lines: ['Hi!', 'Squeak!', 'Hello there.'], ...extra });
 const friendlies = [
-  friend('dale', '1', { wander: 0, bubble: 'bubble-ugh' }),
-  friend('vera', '2', { wander: 3, speed: 0.8, idleTime: [3, 6] }),
+  friend('dale', '9', { wander: 0, bubble: 'bubble-ugh' }),
+  friend('vera', '?', { wander: 3, speed: 0.8, idleTime: [3, 6] }),
   friend('terry', '8', { wander: 4, speed: 0.9, idleTime: [1.5, 4] }),
   friend('benny', '0', { wander: 3, speed: 1.3, idleTime: [1, 3] }),
   defineEffect({ id: 'bubble-ugh', sheet: { src: 'assets/sprites/fx/fluff.png', frameWidth: 16, frameHeight: 16 }, anims: { idle: { frames: [0], durations: [1.6] } } }),
@@ -21,8 +21,8 @@ const friendlies = [
 const registry = new Registry({ ...content, things: [...content.things, ...friendlies] });
 const makeWorld = (level, opts = {}) => makeContentWorld(level, { ...opts, registry });
 
-// Dale ('1') never wanders, so he makes a reliable target to shoot past.
-const hall = room(['###########', '#.........#', '#.........#', '#.........#', '###########'], ['', '', ' >  1   i']);
+// Dale ('9') never wanders, so he makes a reliable target to shoot past.
+const hall = room(['###########', '#.........#', '#.........#', '#.........#', '###########'], ['', '', ' >  9   i']);
 
 const npc = (w, id) => w.things.find((t) => t.def.id === id);
 const said = (w, name) => w.messages.filter((m) => m.startsWith(`${name}: `));
@@ -120,7 +120,7 @@ test('friendlies stay out of doorways, hazards and narrow passages', () => {
 });
 
 test('monsters never go after friendlies', () => {
-  const w = makeWorld(room(['#########', '#.......#', '#.......#', '#.......#', '#########'], ['', ' > 0  i', '    2']));
+  const w = makeWorld(room(['#########', '#.......#', '#.......#', '#.......#', '#########'], ['', ' > 0  i', '    ?']));
   w.player.player.god = true;
   const monster = w.things.find((t) => t.kind === 'monster');
   run(w, mockInput(), 15, () => assert.notEqual(monster.target?.kind, 'npc'));

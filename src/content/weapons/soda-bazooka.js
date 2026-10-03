@@ -9,6 +9,7 @@ export default defineWeapon({
   ammo: 'soda',
   priority: 1,
   flashLight: 2,
+  offset: [0, 18],
   sheet: { src: 'assets/sprites/weapons/soda-bazooka.png', frameWidth: 128, frameHeight: 96 },
   anims: {
     idle: [0],

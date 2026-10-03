@@ -127,6 +127,9 @@ L.put(47, 28, '!')
 L.put(39, 27, 'L')
 L.puts('P', (48, 33), (45, 27))
 L.put(43, 34, 'd')
+# Marbles for the slingshot.
+L.puts('M', (12, 8), (30, 8), (41, 31))
+L.put(60, 7, 'J')
 
 legend = {
     'u': {'door': 'vent-wall', 'secret': True},

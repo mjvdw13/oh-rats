@@ -32,19 +32,21 @@ Serve the folder and open it in any modern desktop or mobile browser (see
 ULTRA ZOMBIE!
 
 **The house (episode 1):** E1M1 The Basement, E1M2 The Kitchen, E1M3 The Living
-Room and E1M4 The Attic (Dad). Find the **mouse hole** to leave each floor.
+Room, E1M4 Upstairs (the floor is lava!) and E1M5 The Attic (Dad). Find the **mouse hole** to leave each floor.
 Doors with a blue, yellow or red stripe need that key. Vent covers open like
 doors, and the vents hide shortcuts and secrets.
 
-**Weapons:** Zombie Claws (1), the Bone Shotgun (2, never runs out), the Rubber
-Band Gatling (3), the Soda Bazooka (4) and the Mega Microwave (5).
+**Weapons:** Zombie Claws and the Crowbar (1), the Bone Shotgun (2, never runs
+out) and the Slingshot (2 again), the Rubber Band Gatling (3), the Soda Bazooka
+(4), the Mega Microwave (5), the Flare Gun (6) and the Blow Torch (7). Press a
+number twice to swap between two weapons that share it.
 
 **Rats:** House Rats, Slingshot Rats, Spitball Rats, Chonky Rats, see-through
 Ninja Rats and big Pack Rats. And Dad, who throws mousetraps.
 
 **Cheats** (type them during play): `iddqd` and `zombie` (can't be hurt),
 `idkfa` and `cheese` (everything), `idclip` (walk through walls), `iddt`
-(reveal the map), `idclev##` (warp, for example `idclev14` for the attic).
+(reveal the map), `idclev##` (warp, for example `idclev15` for the attic).
 
 ## Run it locally
 

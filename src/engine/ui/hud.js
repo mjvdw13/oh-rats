@@ -120,18 +120,30 @@ export class Hud {
       if (p.keys.has(k.id) && icons) s.blit(icons.frame(k.icon ?? i), kx + 2, Y + 3 + i * 9);
     });
 
-    // Ammo tally.
+    // Ammo tally: "NAME have/max" rows for up to four ammo types; with more,
+    // two columns of "NAME have" (up to eight).
     const [tx, tw] = panel('tally');
-    let row = 0;
-    for (const a of reg.ammo.values()) {
-      const y = Y + 5 + row * 6;
-      const have = p.ammo[a.id] ?? 0;
-      const remap = this._tint('glow-yellow');
-      tiny?.draw(s, a.short ?? a.id.slice(0, 4).toUpperCase(), tx + 3, y, { remap: labelTint });
-      tiny?.draw(s, String(have), tx + 41, y, { align: 'right', remap });
-      tiny?.draw(s, '/', tx + 45, y, { remap: labelTint });
-      tiny?.draw(s, String(p.maxAmmo[a.id] ?? a.max), tx + tw - 3, y, { align: 'right', remap });
-      if (++row >= 4) break;
+    const ammo = [...reg.ammo.values()];
+    const remap = this._tint('glow-yellow');
+    const short = (a) => a.short ?? a.id.slice(0, 4).toUpperCase();
+    if (ammo.length <= 4) {
+      ammo.forEach((a, row) => {
+        const y = Y + 5 + row * 6;
+        tiny?.draw(s, short(a), tx + 3, y, { remap: labelTint });
+        tiny?.draw(s, String(p.ammo[a.id] ?? 0), tx + 41, y, { align: 'right', remap });
+        tiny?.draw(s, '/', tx + 45, y, { remap: labelTint });
+        tiny?.draw(s, String(p.maxAmmo[a.id] ?? a.max), tx + tw - 3, y, { align: 'right', remap });
+      });
+    } else {
+      const rows = Math.min(4, Math.ceil(ammo.length / 2));
+      const colW = Math.floor(tw / 2);
+      const step = rows <= 3 ? 8 : 6;
+      ammo.slice(0, rows * 2).forEach((a, i) => {
+        const x = tx + Math.floor(i / rows) * colW;
+        const y = Y + 5 + (i % rows) * step;
+        tiny?.draw(s, short(a), x + 2, y, { remap: labelTint });
+        tiny?.draw(s, String(p.ammo[a.id] ?? 0), x + colW - 1, y, { align: 'right', remap });
+      });
     }
   }
 

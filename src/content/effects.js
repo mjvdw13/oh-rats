@@ -73,4 +73,37 @@ export const projectiles = [
     radius: 0.3,
     sounds: { explode: 'microwave-boom' },
   }),
+  // Slingshot: a glass marble, fast and dead straight.
+  defineProjectile({
+    id: 'marble',
+    sheet: FX('marble', 16, 16),
+    anims: { fly: { frames: [0, 1], fps: 12, loop: true }, explode: { frames: [2, 3, 4], fps: 14 } },
+    fullbright: false,
+    speed: 26,
+    damage: [20, 50],
+    radius: 0.08,
+    sounds: { explode: 'marble-plink' },
+  }),
+  // Flare Gun: a fizzing red flare that bursts into sparks.
+  defineProjectile({
+    id: 'flare',
+    sheet: FX('flare', 48, 48),
+    anims: { fly: { frames: [0, 1], fps: 14, loop: true }, explode: { frames: [2, 3, 4, 5], fps: 11 } },
+    speed: 14,
+    damage: [30, 80],
+    splash: { radius: 1.8, damage: 60 },
+    radius: 0.12,
+    sounds: { explode: 'flare-burst' },
+  }),
+  // Blow Torch: a short-lived lick of flame (it fizzles out after a few tiles).
+  defineProjectile({
+    id: 'torch-flame',
+    sheet: FX('torch-flame', 32, 32),
+    anims: { fly: { frames: [0, 1, 2], fps: 10 }, explode: { frames: [3, 4], fps: 14 } },
+    speed: 9,
+    life: 0.38,
+    damage: [5, 12],
+    radius: 0.2,
+    z: 0.35,
+  }),
 ];

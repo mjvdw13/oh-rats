@@ -6,6 +6,7 @@ import { darken, lighten, mix } from '../lib/canvas.js';
 import { C, G } from '../lib/pal.js';
 import { Model, MAT } from '../lib/model.js';
 import { sheet, flash } from '../lib/sprite.js';
+import { fireBlob } from './fx.js';
 
 const W = (name) => `assets/sprites/weapons/${name}.png`;
 const ZFUR = mix(C('toxic', 0.5), C('gray', 0.52), 0.45);
@@ -245,12 +246,215 @@ function microwaveSheet() {
   return sheet([microwaveFrame(), microwaveFrame({ led: 1 }), microwaveFrame({ led: 1, charge: 2 }), microwaveFrame({ fire: true, kick: 4 }), microwaveFrame({ kick: 10 })]);
 }
 
+// ------------------------------------------------------------------ crowbar
+
+const RED_PAINT = C('blood', 0.58);
+const BAR_STEEL = C('steel', 0.72);
+
+/**
+ * A red crowbar held at (gx, gy): the shaft runs `len` pixels toward `angle`
+ * (screen radians, -PI/2 = straight up) from the paw and ends in a hook; a
+ * short bent pry end pokes out below the paw.
+ */
+function crowbar(m, gx, gy, angle, len = 70, { z0 = 30, z1 = 10 } = {}) {
+  const dx = Math.cos(angle);
+  const dy = Math.sin(angle);
+  const tip = [gx + dx * len, gy + dy * len, z1];
+  const tail = [gx - dx * 14, gy - dy * 14, z0 + 3];
+  m.capsule(...tail, ...tip, 4.4, 3.6, RED_PAINT, { ...MAT.metal, spec: 0.45 });
+  // The pry end: a short kink, bare steel.
+  m.capsule(...tail, tail[0] - dy * 5 - dx * 3, tail[1] + dx * 5 - dy * 3, z0 + 3, 4, 2.2, BAR_STEEL, MAT.metal);
+  // The hook: an arc curling round to one side, bare steel at the claw.
+  const R = 9;
+  const cx = tip[0] - dy * R;
+  const cy = tip[1] + dx * R;
+  const a0 = Math.atan2(tip[1] - cy, tip[0] - cx);
+  let prev = tip;
+  for (let k = 1; k <= 7; k++) {
+    const a = a0 + (k / 7) * Math.PI * 1.15;
+    const p = [cx + Math.cos(a) * R, cy + Math.sin(a) * R, z1 - k * 0.3];
+    m.capsule(...prev, ...p, 3.6, 3.2, k > 4 ? BAR_STEEL : RED_PAINT, MAT.metal);
+    prev = p;
+  }
+  m.paint(prev[0], prev[1], 1, 2.2, C('gray', 0.15)); // the split claw
+}
+
+function crowbarFrame({ paw, angle, len = 78, swoosh = 0 }) {
+  const m = new Model(160, 96, { seed: 131 });
+  const [px, py] = paw;
+  crowbar(m, px, py, angle, len);
+  arm(m, [px + 34, py + 60, 30], [px + 4, py + 8, 32], 11);
+  grip(m, px, py, 34, 8.5, -1);
+  const c = m.render(RENDER);
+  for (let k = 0; k < swoosh; k++) {
+    // Speed lines trailing the swing.
+    c.line(150 - k * 3, 10 + k * 7, 40, 26 + k * 8, C('gray', 0.85));
+    c.line(146 - k * 3, 12 + k * 7, 60, 25 + k * 8, G('tube', 1));
+  }
+  return c;
+}
+
+function crowbarSheet() {
+  return sheet([
+    crowbarFrame({ paw: [118, 82], angle: -1.95 }),
+    crowbarFrame({ paw: [124, 74], angle: -1.3, len: 62 }),
+    crowbarFrame({ paw: [86, 66], angle: -2.8, len: 80, swoosh: 3 }),
+    crowbarFrame({ paw: [52, 90], angle: 2.6, len: 72 }),
+  ]);
+}
+
+// ------------------------------------------------------------------ slingshot
+
+const FORK = C('wood', 0.5);
+const RUBBER = C('blood', 0.48);
+
+/** pouch: [x, y, z] of the leather pouch; pinch: where the right paw holds it. */
+function slingshotFrame({ pouch, marble = true, pinch = null, twang = 0 }) {
+  const m = new Model(128, 96, { seed: 137 });
+  const cx = 60;
+  // The Y-shaped fork, held up in the left paw.
+  m.capsule(cx - 2, 108, 26, cx, 52, 12, 4.4, 3.8, FORK, MAT.wood);
+  const tips = [[cx - 17, 22, 6], [cx + 17, 22, 6]];
+  for (const t of tips) {
+    const mid = [t[0] * 0.6 + cx * 0.4, 36, 9];
+    m.capsule(cx, 54, 12, ...mid, 3.6, 3.2, FORK, MAT.wood);
+    m.capsule(...mid, ...t, 3.2, 2.6, FORK, MAT.wood);
+    m.sphere(t[0], t[1] - 1, t[2], 3.2, RUBBER, MAT.plastic); // the band tied round the tip
+  }
+  for (const y of [80, 84]) m.stroke(cx - 4, y, cx + 4, y, 1.2, C('blood', 0.4), MAT.cloth); // tape on the handle
+  // The bands and the pouch.
+  for (const t of tips) m.capsule(...t, ...pouch, 1.3, 1.5, RUBBER, MAT.plastic);
+  m.ellipsoid(...pouch, 5.5, 3.6, 3, C('wood', 0.32), MAT.leather);
+  if (marble) {
+    m.sphere(pouch[0], pouch[1] - 2.5, pouch[2] + 2, 3.3, C('sky', 0.62), MAT.glass);
+    m.paint(pouch[0] - 0.8, pouch[1] - 3, 1.4, 0.8, C('green', 0.6), MAT.glass);
+  }
+  arm(m, [6, 126, 30], [cx - 14, 92, 30], 10);
+  grip(m, cx - 6, 88, 32, 8, 1);
+  if (pinch) {
+    arm(m, [128, 128, 30], [pinch[0] + 14, pinch[1] + 14, pinch[2]], 10);
+    grip(m, pinch[0] + 6, pinch[1] + 4, pinch[2] + 2, 7.5, -1);
+  } else {
+    arm(m, [130, 128, 26], [110, 104, 30], 10);
+  }
+  const c = m.render(RENDER);
+  if (twang) {
+    // The bands still wobbling after the shot.
+    for (const t of tips) {
+      for (let s = 0; s <= 12; s++) {
+        const f = s / 12;
+        c.set(t[0] + (pouch[0] - t[0]) * f + Math.sin(f * Math.PI * 3) * twang, t[1] + (pouch[1] - t[1]) * f, C('blood', 0.7));
+      }
+    }
+  }
+  return c;
+}
+
+function slingshotSheet() {
+  return sheet([
+    slingshotFrame({ pouch: [62, 52, 26], pinch: [66, 56, 32] }),
+    slingshotFrame({ pouch: [64, 84, 44], pinch: [68, 88, 46] }),
+    slingshotFrame({ pouch: [60, 16, 2], marble: false, twang: 2 }),
+    slingshotFrame({ pouch: [61, 36, 16], marble: false, twang: 1 }),
+  ]);
+}
+
+// ------------------------------------------------------------------ flare gun
+
+const FLARE_ORANGE = C('orange', 0.62);
+
+function flareGunFrame({ fire = false, kick = 0, open = false } = {}) {
+  const m = new Model(128, 96, { seed: 139 });
+  const cx = 66;
+  const k = kick - 8;
+  // A chunky orange plastic flare pistol: a fat barrel on a stubby frame.
+  if (open) {
+    // Broken open: the barrel tips down on its hinge, a fresh flare going in.
+    m.capsule(cx, 70 + k, 28, cx - 4, 50 + k, 30, 8.5, 8, FLARE_ORANGE, MAT.plastic);
+    m.paint(cx - 4, 47 + k, 6, 4.4, C('gray', 0.08));
+    m.capsule(cx + 2, 66 + k, 34, cx + 4, 56 + k, 36, 4.4, 4.4, C('blood', 0.6), MAT.plastic);
+    m.ellipsoid(cx + 4, 55 + k, 36, 4.6, 2, 2, C('yellow', 0.7), MAT.brass);
+  } else {
+    m.capsule(cx, 72 + k, 30, cx - 1, 36 + k, 8, 13, 11, FLARE_ORANGE, MAT.plastic);
+    m.paint(cx - 1, 33 + k, 8, 5.4, C('gray', 0.06));
+    if (!fire) m.paint(cx - 1, 33.5 + k, 4.4, 3, C('blood', 0.5)); // the flare waiting inside
+    for (const y of [60, 50]) m.paint(cx, y + k, 13, 1, darken(FLARE_ORANGE, 0.25));
+  }
+  // The frame, hammer and grip.
+  m.slab([[cx - 9, 66 + k], [cx + 9, 66 + k], [cx + 10, 82 + k], [cx - 8, 82 + k]], 30, darken(FLARE_ORANGE, 0.12), MAT.plastic, { bevel: 2 });
+  m.capsule(cx, 70 + k, 34, cx, 64 + k, 38, 2, 1.6, C('gray', 0.25), MAT.metal);
+  m.capsule(cx + 4, 80 + k, 30, cx + 10, 104 + k, 34, 6, 6.5, darken(FLARE_ORANGE, 0.2), MAT.plastic);
+  // Right paw on the grip, left paw cupped underneath.
+  arm(m, [128, 128, 28], [cx + 18, 98 + k, 32], 10);
+  grip(m, cx + 12, 90 + k, 36, 8.5, -1);
+  arm(m, [0, 126, 28], [cx - 20, 92 + k, 32], 10);
+  grip(m, cx - 10, 88 + k, 34, 7.5, 1);
+  const c = m.render(RENDER);
+  if (fire) {
+    flash(c, cx - 1, 26 + k, 20, G('pale', 1), G('red', 1), 5);
+    flash(c, cx - 1, 26 + k, 10, [255, 255, 255], G('yellow', 0.8), 11);
+  }
+  return c;
+}
+
+function flareGunSheet() {
+  return sheet([flareGunFrame(), flareGunFrame({ fire: true, kick: 3 }), flareGunFrame({ kick: 12 }), flareGunFrame({ kick: 8, open: true })]);
+}
+
+// ------------------------------------------------------------------ blow torch
+
+const PROPANE = C('sky', 0.5);
+const BRASS = C('yellow', 0.66);
+const TORCH_FIRE = [[255, 255, 255], G('cyan', 1), G('cyan', 0.66), G('pale', 1), G('yellow', 0.7), G('yellow', 0.35), G('yellow', 0)];
+const PILOT = [[255, 255, 255], G('cyan', 1), G('cyan', 0.66), G('cyan', 0.33)];
+
+function blowTorchFrame({ jet = 0, pilot = 0 } = {}) {
+  // A taller frame than the other weapons, so the flame has room above the nozzle.
+  const m = new Model(128, 128, { seed: 149 });
+  const cx = 64;
+  const y = 48;
+  // A blue propane cylinder with a brass torch head and a long nozzle.
+  m.capsule(cx + 2, 120 + y, 32, cx, 64 + y, 24, 16, 15, PROPANE, { ...MAT.metal, spec: 0.35 });
+  m.paint(cx + 1, 84 + y, 15.5, 4, C('beige', 0.92), MAT.paper); // the label
+  m.paint(cx + 1, 84 + y, 4.4, 2.2, C('blood', 0.55), MAT.paper);
+  m.ellipsoid(cx, 60 + y, 22, 9, 5.6, 5, BRASS, MAT.brass);
+  m.capsule(cx + 6, 58 + y, 24, cx + 16, 55 + y, 26, 2.4, 2.4, BRASS, MAT.brass); // the valve stem
+  m.ellipsoid(cx + 18, 55 + y, 26, 4.2, 4.2, 2.6, C('blood', 0.6), MAT.plastic); // the valve knob
+  m.capsule(cx, 56 + y, 20, cx - 2, 24 + y, 6, 3.6, 2.8, C('steel', 0.7), MAT.metal);
+  m.capsule(cx - 2, 27 + y, 7, cx - 2, 18 + y, 4, 4, 4, BRASS, MAT.brass); // the burner tip
+  // Paws on both sides of the cylinder.
+  arm(m, [0, 126 + y, 30], [cx - 24, 96 + y, 32], 10);
+  grip(m, cx - 16, 88 + y, 36, 8, 1);
+  arm(m, [128, 126 + y, 28], [cx + 26, 98 + y, 32], 10);
+  grip(m, cx + 18, 90 + y, 36, 8.5, -1);
+  const c = m.render(RENDER);
+  const tip = 14 + y;
+  if (jet) {
+    // A roaring jet of flame, blue at the nozzle and yellow at the ends.
+    for (let k = 0; k < 8; k++) {
+      const t = k / 7;
+      fireBlob(c, cx - 2 + Math.sin(k * 2 + jet) * 2 * t, tip - t * 34, 3.5 + t * (7 + jet * 2), 160 + jet * 7 + k, TORCH_FIRE.slice(k > 2 ? 3 : 0), { holes: t * 0.3 });
+    }
+  } else {
+    fireBlob(c, cx - 2, tip - pilot, 3 + pilot, 170 + pilot, PILOT);
+  }
+  return c;
+}
+
+function blowTorchSheet() {
+  return sheet([blowTorchFrame(), blowTorchFrame({ jet: 1 }), blowTorchFrame({ jet: 2 }), blowTorchFrame({ pilot: 1 })]);
+}
+
 export default [
   { name: 'claws', out: W('claws'), draw: clawsSheet, dither: 'fs' },
   { name: 'bone-shotgun', out: W('bone-shotgun'), draw: boneShotgunSheet, dither: 'fs' },
   { name: 'band-gatling', out: W('band-gatling'), draw: gatlingSheet, dither: 'fs' },
   { name: 'soda-bazooka', out: W('soda-bazooka'), draw: bazookaSheet, dither: 'fs' },
   { name: 'mega-microwave', out: W('mega-microwave'), draw: microwaveSheet, dither: 'fs' },
+  { name: 'crowbar', out: W('crowbar'), draw: crowbarSheet, dither: 'fs' },
+  { name: 'slingshot', out: W('slingshot'), draw: slingshotSheet, dither: 'fs' },
+  { name: 'flare-gun', out: W('flare-gun'), draw: flareGunSheet, dither: 'fs' },
+  { name: 'blow-torch', out: W('blow-torch'), draw: blowTorchSheet, dither: 'fs' },
 ];
 
 export { arm, grip, boneRod, ZFUR, PAW, BONE };

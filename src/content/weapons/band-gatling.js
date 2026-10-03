@@ -10,6 +10,7 @@ export default defineWeapon({
   priority: 5,
   accurateFirstShot: true,
   flashLight: 1,
+  offset: [0, 18],
   sheet: { src: 'assets/sprites/weapons/band-gatling.png', frameWidth: 128, frameHeight: 96 },
   anims: {
     idle: [0],

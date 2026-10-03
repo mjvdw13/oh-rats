@@ -69,6 +69,34 @@ export default [
   }),
   defineSound({ id: 'claw-swipe', synth: { wave: 'noise', duration: 0.16, attack: 0.03, release: 0.1, highpass: 1200, lowpass: [5000, 1500], volume: 0.5 }, pitchVariance: 0.1 }),
   defineSound({ id: 'claw-hit', synth: { ...thump(160, 60, 0.12, 0.8), layers: [burst(0.06, [4000, 900], 0.5)] }, pitchVariance: 0.1 }),
+  defineSound({ id: 'crowbar-swing', synth: { wave: 'noise', duration: 0.22, attack: 0.04, release: 0.14, highpass: 600, lowpass: [3000, 900], volume: 0.55 }, pitchVariance: 0.1 }),
+  defineSound({
+    id: 'crowbar-hit', // CLONK: a heavy thud with a metal ring
+    synth: { ...thump(130, 50, 0.16, 1), layers: [burst(0.08, [3500, 700], 0.6), { wave: 'triangle', freq: 1320, duration: 0.3, attack: 0.002, release: 0.28, volume: 0.22, vibrato: { rate: 12, depth: 0.3 } }] },
+    pitchVariance: 0.08,
+  }),
+  defineSound({ id: 'slingshot-pull', synth: { wave: 'saw', freq: 180, freqEnd: 320, duration: 0.15, attack: 0.02, release: 0.05, lowpass: 900, volume: 0.25, vibrato: { rate: 40, depth: 1.5 } } }),
+  defineSound({
+    id: 'slingshot-fire', // twang!
+    synth: { wave: 'triangle', freq: 520, freqEnd: 160, duration: 0.18, attack: 0.002, release: 0.16, volume: 0.5, vibrato: { rate: 45, depth: 2 }, layers: [burst(0.04, [6000, 2500], 0.3)] },
+    pitchVariance: 0.08,
+  }),
+  defineSound({
+    id: 'marble-plink', // a marble bouncing off something
+    synth: { wave: 'sine', freq: 2400, duration: 0.08, attack: 0.001, release: 0.07, volume: 0.35, repeat: { count: 3, interval: 0.07, pitch: 0.92, decay: 0.55 } },
+    pitchVariance: 0.15,
+  }),
+  defineSound({
+    id: 'flare-fire', // a hollow POONK and a hiss
+    synth: { ...thump(220, 90, 0.18, 0.9), layers: [{ wave: 'noise', duration: 0.7, attack: 0.01, release: 0.5, highpass: 2000, lowpass: 8000, volume: 0.35, noiseHold: 2 }] },
+  }),
+  defineSound({ id: 'flare-reload', synth: { ...click(900, 0.4), layers: [{ ...click(1300, 0.4), delay: 0.12 }] } }),
+  defineSound({
+    id: 'flare-burst', // sparks everywhere: crackle-pop
+    synth: { wave: 'noise', duration: 0.6, attack: 0.002, release: 0.5, lowpass: [6000, 900], noiseHold: 6, volume: 0.7, layers: [thump(150, 50, 0.25, 0.7), { ...fizz(0.6, 0.35), delay: 0.05 }], ...crunch },
+    pitchVariance: 0.1,
+  }),
+  defineSound({ id: 'torch-roar', synth: { wave: 'noise', duration: 0.12, attack: 0.01, release: 0.08, lowpass: [1400, 900], noiseHold: 2, volume: 0.45 }, pitchVariance: 0.12 }),
 
   // --------------------------------------------------------- world
   defineSound({

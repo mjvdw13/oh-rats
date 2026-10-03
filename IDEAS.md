@@ -17,10 +17,10 @@ where each one lives in the game. Add new ideas to the bottom!
 | You are a zombie rat | Green zombie fur, stitches, one glowing zombie eye (status-bar face, claws, title screen). Gets band-aids as you get hurt. | `src/content/hero.js`, `tools/art/ui/face.js` |
 | A shotgun made out of bones | The **Bone Shotgun**: a femur barrel, a spine of vertebrae and a little skull for a stock | `src/content/weapons/bone-shotgun.js`, `tools/art/sprites/weapons.js` |
 | Infinite ammo, and you start with it | It has no ammo type, so it never runs out (the HUD shows ∞) | `src/content/weapons/bone-shotgun.js` |
-| Scattered weapons | Rubber Band Gatling (basement), Soda Bazooka (kitchen pantry), Mega Microwave (attic) | `src/content/weapons/`, `src/content/items/weapons.js` |
+| Scattered weapons | Crowbar, Slingshot and Rubber Band Gatling (basement), Soda Bazooka (kitchen pantry), Flare Gun (living room den), Blow Torch (upstairs linen closet), Mega Microwave (attic) | `src/content/weapons/`, `src/content/items/weapons.js` |
 | Supplies | Rubber bands, soda cans, batteries, a lunchbox, armour (bottle caps, a thimble helmet, tin-can armour) and powerups (hot sauce, bubble wrap, a glow stick, rain boots, house blueprints) | `src/content/items/` |
 | Healing items | Cheese crumbs, cheese wedges, pizza slices and the Golden Cheese | `src/content/items/health.js` |
-| A really big house | The basement, the kitchen, the living room and the attic | `src/content/levels/` |
+| A really big house | The basement, the kitchen, the living room, upstairs (the kids' rooms and the playroom) and the attic | `src/content/levels/` |
 | With vents | Vent covers open like doors. Vents are shortcuts and secret hiding places in every level | `src/content/levels/legend.js` (`G`, `V`, `Y`) |
 | Enemies are other rats | House Rat, Slingshot Rat, Spitball Rat, Chonky Rat, Ninja Rat, Pack Rat | `src/content/monsters/` |
 | The boss is the dad of the house | **Dad**, in his bathrobe and slippers, throws mousetraps. Hurt him and he gets angry, and his stomps knock rats out of the vents. Beat him and he falls asleep. | `src/content/monsters/dad.js`, `tools/art/sprites/dad.js` |
@@ -30,7 +30,7 @@ where each one lives in the game. Add new ideas to the bottom!
 - The game is bright and cheerful: daytime, sunny windows, no blood (rats lose
   tufts of fur and get dizzy stars), and Dad falls asleep instead of dying.
 - The zombie rat doesn't have a name yet. What should it be called?
-- There's a "the floor is LAVA" floor (for the playroom, in a future level).
+- The playroom upstairs has a "the floor is LAVA" floor. Rain boots let you walk on it.
 - The ending hints at a sequel: "...was that a CAT?"
 
 ## New ideas

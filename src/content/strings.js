@@ -71,7 +71,7 @@ export default {
     { text: 'FIRE ......... CLICK / F / CTRL', tint: 'beige' },
     { text: 'USE / OPEN ... E / SPACE / RIGHT CLICK', tint: 'beige' },
     { text: 'RUN .......... SHIFT (OR ALWAYS RUN)', tint: 'beige' },
-    { text: 'WEAPONS ...... 1-5 / MOUSE WHEEL / Q', tint: 'beige' },
+    { text: 'WEAPONS ...... 1-7 / MOUSE WHEEL / Q', tint: 'beige' },
     { text: 'AUTOMAP ...... TAB / M   (ZOOM + -)', tint: 'beige' },
     { text: 'MENU ......... ESC', tint: 'beige' },
     { text: '' },

@@ -133,6 +133,11 @@ L.puts(',', (5, 38), (5, 37), (9, 40), (11, 40))
 L.put(5, 32, 'O')
 L.puts(';', (3, 31), (7, 31), (3, 33), (7, 33))
 L.put(5, 30, 'n')
+# The flare gun in the den, flares and marbles.
+L.put(50, 20, '6')
+L.puts('E', (42, 26), (14, 6))
+L.put(46, 7, 'Z')
+L.puts('M', (16, 45), (26, 40))
 
 legend = {
     'h': {'wall': 'door-wood'},  # the front door (it doesn't open: you're a rat, use the vents)

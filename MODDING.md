@@ -299,6 +299,9 @@ Floor options:
 - `damage`: hurts every second while standing on it (waders protect).
 - `secret: true`: entering a connected group of these counts as one secret.
 - `exit: true`: stepping here ends the level.
+- `push: [dx, dy]`: a conveyor belt. It carries the player along at that many
+  tiles per second (`[0, -2.5]` runs north). You can still walk against it,
+  slowly. Give it an animated floor texture that runs the same way.
 - `tag`: a name that triggers and actions can refer to.
 
 Door options:

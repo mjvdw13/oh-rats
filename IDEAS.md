@@ -20,7 +20,7 @@ where each one lives in the game. Add new ideas to the bottom!
 | Scattered weapons | Crowbar, Slingshot and Rubber Band Gatling (basement), Soda Bazooka (kitchen pantry), Flare Gun (living room den), Blow Torch (upstairs linen closet), Mega Microwave (attic) | `src/content/weapons/`, `src/content/items/weapons.js` |
 | Supplies | Rubber bands, soda cans, batteries, a lunchbox, armour (bottle caps, a thimble helmet, tin-can armour) and powerups (hot sauce, bubble wrap, a glow stick, rain boots, house blueprints) | `src/content/items/` |
 | Healing items | Cheese crumbs, cheese wedges, pizza slices and the Golden Cheese | `src/content/items/health.js` |
-| A really big house | The basement, the kitchen, the living room, upstairs (the kids' rooms and the playroom) and the attic | `src/content/levels/` |
+| A really big house | The basement, the kitchen, the living room, upstairs (the kids' rooms and the playroom) and the attic. Then episode 2: a whole warehouse (the loading dock, the aisles, the big freezer, the conveyor belts and the lumber yard) | `src/content/levels/` |
 | With vents | Vent covers open like doors. Vents are shortcuts and secret hiding places in every level | `src/content/levels/legend.js` (`G`, `V`, `Y`) |
 | Enemies are other rats | House Rat, Slingshot Rat, Spitball Rat, Chonky Rat, Ninja Rat, Pack Rat | `src/content/monsters/` |
 | The boss is the dad of the house | **Dad**, in his bathrobe and slippers, throws mousetraps. Hurt him and he gets angry, and his stomps knock rats out of the vents. Beat him and he falls asleep. | `src/content/monsters/dad.js`, `tools/art/sprites/dad.js` |
@@ -35,9 +35,10 @@ where each one lives in the game. Add new ideas to the bottom!
 - Episode 2 is a warehouse. The zombie rat falls asleep in a cardboard box and
   wakes up in a delivery truck parked at the loading dock.
 - The warehouse boss is **the Lumberjack**, with a chainsaw. Beat him and you
-  get the chainsaw. His boss fight will be in the lumber yard at the back of
-  the warehouse (`src/content/monsters/lumberjack.js`,
-  `src/content/weapons/chainsaw.js`).
+  get the chainsaw. He's in the lumber yard behind the warehouse (E2M5;
+  `src/content/monsters/lumberjack.js`, `src/content/weapons/chainsaw.js`).
+- The sorting room's conveyor belts carry you along, and the blue key sits on
+  an island in the middle where every belt runs outward.
 
 ## New ideas
 

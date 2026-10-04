@@ -83,4 +83,5 @@ export default [
   defineDecoration({ id: 'pallet', sheet: S('pallet', 48, 48), solid: true, radius: 0.42 }),
   defineDecoration({ id: 'forklift', sheet: S('forklift', 64, 56), solid: true, radius: 0.45 }),
   defineDecoration({ id: 'traffic-cone', sheet: S('traffic-cone', 24, 32), solid: true, radius: 0.14 }),
+  defineDecoration({ id: 'log-pile', sheet: S('log-pile', 48, 40), solid: true, radius: 0.42 }),
 ];

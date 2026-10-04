@@ -9,8 +9,12 @@ import e1m3 from './e1m3.js';
 import e1m4 from './e1m4.js';
 import e1m5 from './e1m5.js';
 import e2m1 from './e2m1.js';
+import e2m2 from './e2m2.js';
+import e2m3 from './e2m3.js';
+import e2m4 from './e2m4.js';
+import e2m5 from './e2m5.js';
 
-export const levels = [e1m1, e1m2, e1m3, e1m4, e1m5, e2m1];
+export const levels = [e1m1, e1m2, e1m3, e1m4, e1m5, e2m1, e2m2, e2m3, e2m4, e2m5];
 
 export const episodes = [
   defineEpisode({
@@ -24,13 +28,11 @@ export const episodes = [
   defineEpisode({
     id: 'e2',
     name: strings.episode2Name,
-    levels: ['e2m1'],
-    // A cut-away of the warehouse. E2M2..E2M5 get their spots when they're built:
-    // e2m2 [160, 150] the aisles, e2m3 [248, 150] the freezer, e2m4 [104, 90] the
-    // conveyor belts, e2m5 [234, 90] the lumber yard, where the Lumberjack is the
-    // boss (MAP_SPOTS_E2 in tools/art/ui/screens.js).
+    levels: ['e2m1', 'e2m2', 'e2m3', 'e2m4', 'e2m5'],
+    // A cut-away of the warehouse: the dock, the aisles and the freezer downstairs,
+    // the conveyor belts and the lumber yard (the Lumberjack) upstairs.
     intermission: 'intermission-e2',
-    map: { spots: { e2m1: [72, 150] } },
-    finale: { text: strings.finale2, background: 'finale-bg', endImage: 'intermission-e2', endText: 'TO BE CONTINUED...', music: 'finale' },
+    map: { spots: { e2m1: [72, 150], e2m2: [160, 150], e2m3: [248, 150], e2m4: [104, 90], e2m5: [234, 90] } },
+    finale: { text: strings.finale2, background: 'finale-bg', endImage: 'finale-e2-end', endText: 'THE END!', music: 'finale' },
   }),
 ];

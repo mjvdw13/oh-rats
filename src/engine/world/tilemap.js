@@ -56,6 +56,9 @@ export class TileMap {
     this.lightFx = new Uint8Array(n);
     this.lightGroup = new Int32Array(n).fill(-1);
     this.damage = new Uint8Array(n);
+    /** Conveyor floors: tiles per second they carry the player along x and y. */
+    this.pushX = new Float32Array(n);
+    this.pushY = new Float32Array(n);
     this.doorIndex = new Int16Array(n).fill(-1);
     this.tag = new Int16Array(n).fill(-1);
     this.seen = new Uint8Array(n);

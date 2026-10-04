@@ -1,7 +1,8 @@
 # TODO: handoff
 
-State as of 2026-10-03: *Raccoon Alex* has been repurposed into *Oh, Rats!*. The
-game boots and plays from the title screen to the finale. `npm test` (55 tests)
+State as of 2026-10-04: *Raccoon Alex* has been repurposed into *Oh, Rats!*, with
+two episodes: the house and the warehouse. The game boots and plays from the
+title screen to both finales. `npm test` (65 tests)
 and `npm run validate` (0 errors, 0 warnings) both pass. All art is regenerated
 from `tools/art/`.
 
@@ -30,7 +31,24 @@ from `tools/art/`.
   - Dad: throws mousetraps; when angry he speeds up and stomps rats out of the
     vents
 - New sounds, new major-key music and all new text.
-- Episode 2 (the warehouse) has started: see *Still to do*.
+- **Episode 2, the warehouse** (built 2026-10-03 and 2026-10-04):
+  - five levels, built by `tools/levels/e2m*.py`, which share their legend
+    and prop glyphs from `tools/levels/warehouse.py` (every shared glyph is
+    taken): E2M1 The Loading Dock, E2M2 The Aisles (Flare Gun), E2M3 The Big
+    Freezer (Blow Torch), E2M4 The Conveyor Belts (Mega Microwave) and E2M5
+    The Lumber Yard (the boss)
+  - the boss, **the Lumberjack** (`src/content/monsters/lumberjack.js`, art
+    in `tools/art/sprites/lumberjack.js`): he throws logs, swings a chainsaw
+    up close and gets mad at half health (3000). Beaten, he drops the
+    **Chainsaw** (`src/content/weapons/chainsaw.js`, slot 1) and the sawmill
+    shed opens; the mouse hole in there ends the episode.
+  - textures for the warehouse (`warehouse.js`), the freezer (`freezer.js`),
+    the sorting room (`sorting.js`, with conveyor belts that run four ways)
+    and the lumber yard (`lumberyard.js`), steel key doors, and props: a
+    pallet, a forklift, a traffic cone and a log pile
+  - a `warehouse` song, a cut-away intermission picture (`intermission-e2`),
+    an ending and an end picture (`finale-e2-end`), all in
+    `tools/art/ui/screens.js`
 - Five levels: E1M1 The Basement, E1M2 The Kitchen, E1M3 The Living Room,
   E1M4 Upstairs (the playroom floor is lava) and E1M5 The Attic (Dad). They're built by `tools/levels/e1m*.py`.
 - Small, generic engine additions:
@@ -39,43 +57,22 @@ from `tools/art/`.
     (`src/engine/ui/hud.js`; the HUD font draws `~` as ∞)
   - the ammo budget treats an infinite starting weapon as unlimited
     (`tools/lib/levelcheck.mjs`)
+  - an episode's `intermission` names the picture behind its level-finished
+    screen (`src/engine/scenes/intermission.js`)
+  - conveyor belts: a floor's `push: [dx, dy]` carries the player along
+    (`src/engine/world/world.js`). They don't carry monsters or items.
 - `tools/art/generate.mjs --group textures|sprites|ui`.
 
 ## Still to do
 
-1. **Episode 2, the warehouse: keep building it.** Started 2026-10-03:
-   - done: warehouse textures (`tools/art/textures/warehouse.js`: corrugated
-     steel, cinder block, pallet racks, crates, a roll-up dock door, concrete
-     with a lane line, asphalt, roof trusses, skylights, a cinder-block mouse
-     hole) and steel key doors (`door-metal-blue/yellow/red` in `doors.js`);
-     props (pallet, forklift, traffic cone) with no glyph of their own; a
-     `warehouse` song; the episode in `src/content/levels/index.js` with its
-     own intermission picture (`intermission-e2`, a cut-away of the warehouse,
-     drawn in `tools/art/ui/screens.js`) and a "TO BE CONTINUED" finale;
-     **E2M1 The Loading Dock** (`tools/levels/e2m1.py`).
-   - The engine change: an episode's `intermission` names its picture.
-   - The warehouse levels share `tools/levels/warehouse.py` (their legend and
-     the prop glyphs P, F, C), since every shared glyph is taken.
-   - The boss is done: **the Lumberjack** (`src/content/monsters/lumberjack.js`,
-     art in `tools/art/sprites/lumberjack.js`). He throws logs and swings a
-     chainsaw up close, gets mad at half health (3000), and when he's beaten
-     he drops the **Chainsaw** (`src/content/weapons/chainsaw.js`, slot 1).
-     Tests in `tests/lumberjack.test.js`. He has no glyph: his level gives him
-     one in its `thingLegend`. Nobody has fought him in a real level yet.
-   - Next: E2M2 The Aisles, E2M3 The Big Freezer, E2M4 The Conveyor Belts,
-     E2M5 The Lumber Yard (the boss fight). Each one gets added to the
-     episode's `levels` and `map.spots` (the planned spots are in the comment
-     there and in `MAP_SPOTS_E2`).
-   - E2M5 must not end the episode the moment he falls (Dad's level does, with
-     a `killed` trigger): the player has to grab the chainsaw first. Open the
-     way to the exit when he's beaten instead, and end the episode at the exit.
-   - Needs art for those: freezer walls and ice, conveyor belts, lumber yard
-     walls (log piles, sawdust floor), maybe a "the floor is a conveyor belt"
-     floor.
-   - When the episode is finished, replace `strings.finale2` and its end
-     picture (it borrows `intermission-e2` for now).
-   - E2M1 is unplayed: check its difficulty (35 rats on skill 3, and you start
-     with only the Bone Shotgun) and the big, open yard.
+1. **Playtest episode 2** at skill 3. Every level passes the validator and a
+   simulated minute of play, and I walked through each one in the browser
+   (with god mode), but nobody has played it for real. Things to check: E2M1
+   has 35 rats and you start it with only the Bone Shotgun; the conveyor
+   belts' speed (`BELT` in `tools/levels/warehouse.py`, 2.5 tiles a second);
+   the blue key's belt island in E2M4; and the Lumberjack's health (3000),
+   log damage and chainsaw damage. Ask the son whether the Lumberjack is
+   scary enough.
 2. **Polish the attic boss fight** in play. It's small: Dad, 7 rats, the Mega
    Microwave by the door. Tune Dad's health (2500), the mousetrap damage and
    the stomp timer after playtesting with the son.
@@ -91,15 +88,20 @@ from `tools/art/`.
 5. **Name the zombie rat** (ask the son!). Then put the name in
    `src/content/strings.js` (the help screen, the finale) and on the title
    portrait (`tools/art/ui/screens.js`, `portraitFrame`).
-6. **Screenshots** for the README (`docs/screenshots/` was removed with the
+6. **Long messages get cut off.** The HUD doesn't wrap messages, and anything
+   over about 55 characters runs off the right edge. Several in episode 1
+   do (the E1M1, E1M2 and E1M4 start messages, the rain boots and the
+   slingshot pickup). Split them into two `message` actions, as the
+   warehouse levels do, or make the HUD wrap.
+7. **Screenshots** for the README (`docs/screenshots/` was removed with the
    old ones), and the `og:image` link preview in `index.html` points at
    `docs/screenshots/title.jpg`.
-7. **Hosting**: done. Pushes to `main` deploy to
+8. **Hosting**: done. Pushes to `main` deploy to
    https://mjvdw13.github.io/oh-rats/ through `.github/workflows/ci.yml`.
-8. Art polish ideas: the Slingshot Rat's slingshot is hard to see, the Chonky
+9. Art polish ideas: the Slingshot Rat's slingshot is hard to see, the Chonky
    Rat's roll-over frames are a little abrupt, and the finale picture could use
    the rat's whole body instead of a big head on a cheese wheel.
-9. The engine's photo-face feature (`src/engine/ui/photoface.js`, `?photo=`)
+10. The engine's photo-face feature (`src/engine/ui/photoface.js`, `?photo=`)
    still draws raccoon masks over human photos. It's unused here; remove it,
    or leave it.
 

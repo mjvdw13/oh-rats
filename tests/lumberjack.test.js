@@ -50,3 +50,16 @@ test('the chainsaw chews through a rat up close', () => {
   run(w, input, 2);
   assert.ok(rat.dead, 'the rat is down');
 });
+
+test('in the lumber yard, beating him opens the sawmill shed (and the way out)', () => {
+  const w = makeWorld('e2m5');
+  const shed = w.map.doors.filter((d) => d.tag === 'shed');
+  assert.equal(shed.length, 1);
+  assert.equal(shed[0].lock, 'remote', 'locked until he is beaten');
+  const boss = w.things.find((t) => t.def.id === 'lumberjack');
+  w.damage(boss, 99999, w.player, w.player);
+  run(w, mockInput(), 0.2);
+  assert.ok(shed[0].state === 'opening' || shed[0].state === 'open');
+  assert.equal(w.exitRequested, null, 'the level does not end until you reach the mouse hole');
+  assert.ok(w.things.some((t) => t.def.id === 'pickup-chainsaw'));
+});

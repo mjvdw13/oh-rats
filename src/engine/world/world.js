@@ -475,6 +475,10 @@ export class World {
     } else {
       this.floorTimer = 0.3;
     }
+    // Conveyor belts carry you along (you can still walk against them, slowly).
+    const px = this.map.pushX[i];
+    const py = this.map.pushY[i];
+    if ((px || py) && !pt.player.dead && !pt.player.noclip) this.tryMove(pt, px / 60, py / 60);
   }
 
   _pickups() {

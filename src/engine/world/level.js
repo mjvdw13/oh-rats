@@ -150,6 +150,10 @@ export function buildLevel(registry, level, opts = {}) {
         }
         if (e.secret) map.flags[i] |= F_SECRET;
         if (e.exit) map.flags[i] |= F_EXIT;
+        if (e.push) {
+          map.pushX[i] = e.push[0];
+          map.pushY[i] = e.push[1];
+        }
       }
       if (e.tag) {
         const t = tagIndex(e.tag);

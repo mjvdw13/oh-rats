@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { buildLevel, resolveLegend, contentAngle } from '../src/engine/world/level.js';
 import { F_SOLID, F_DOOR, F_SKY, F_SECRET, F_DAMAGE, F_EXIT } from '../src/engine/world/tilemap.js';
-import { registry, room } from './helpers.js';
+import { registry, room, makeWorld, mockInput, run } from './helpers.js';
 
 test('legend entries inherit from their base and can be overridden per level', () => {
   const level = room(['#'], [''], { legend: { k: { base: '.', light: 40, tag: 'dark' }, '.': { floor: 'linoleum', light: 99 } } });
@@ -57,4 +57,19 @@ test('content angles: degrees counter-clockwise with north up', () => {
   assert.equal(contentAngle(0), -0);
   assert.equal(contentAngle('N'), (-90 * Math.PI) / 180);
   assert.equal(contentAngle(180), -Math.PI);
+});
+
+test('conveyor belts carry the player along, and you can walk against them', () => {
+  const belt = room(['##########', '#>>>>>>>>#', '##########'], ['', ' ^'], { legend: { '>': { base: '.', push: [2.5, 0] } } });
+  const ride = makeWorld(belt, { noMonsters: true });
+  const x0 = ride.player.x;
+  run(ride, mockInput(), 1);
+  assert.ok(ride.player.x > x0 + 2, 'it carried the player east');
+  const against = makeWorld(belt, { noMonsters: true });
+  against.player.x = 7.5;
+  against.player.angle = Math.PI; // facing west, into the belt
+  const input = mockInput();
+  input.hold('forward');
+  run(against, input, 1);
+  assert.ok(against.player.x < 7.5, 'walking west still gets somewhere');
 });

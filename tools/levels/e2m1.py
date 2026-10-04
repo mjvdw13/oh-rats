@@ -153,8 +153,11 @@ level_legend = legend(
     z={'base': 'm', 'secret': True},
 )
 triggers = [
-    {'on': 'start', 'do': [{'action': 'message', 'text': 'YOU FELL ASLEEP IN A CARDBOARD BOX... AND WOKE UP IN A TRUCK! WHERE ARE WE?'}]},
-    {'on': 'pickup', 'thing': 'key-yellow', 'do': [{'action': 'message', 'text': 'THE YELLOW KEY! THE SHIPPING HALL IS SOUTH OF THE RACKS.'}]},
+    {'on': 'start', 'do': [
+        {'action': 'message', 'text': 'YOU FELL ASLEEP IN A CARDBOARD BOX...'},
+        {'action': 'message', 'text': '...AND WOKE UP IN A TRUCK! WHERE ARE WE?'},
+    ]},
+    {'on': 'pickup', 'thing': 'key-yellow', 'do': [{'action': 'message', 'text': 'THE YELLOW KEY! THE SHIPPING HALL IS PAST THE RACKS.'}]},
 ]
 L.write(
     os.path.join(ROOT, 'src/content/levels', 'e2m1.js'),

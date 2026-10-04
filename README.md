@@ -32,12 +32,15 @@ Serve the folder and open it in any modern desktop or mobile browser (see
 ULTRA ZOMBIE!
 
 **The house (episode 1):** E1M1 The Basement, E1M2 The Kitchen, E1M3 The Living
-Room, E1M4 Upstairs (the floor is lava!) and E1M5 The Attic (Dad). Find the **mouse hole** to leave each floor.
+Room, E1M4 Upstairs (the floor is lava!) and E1M5 The Attic (Dad).
 
-**The warehouse (episode 2, being built):** E2M1 The Loading Dock. More
-warehouse levels are on the way.
-Doors with a blue, yellow or red stripe need that key. Vent covers open like
-doors, and the vents hide shortcuts and secrets.
+**The warehouse (episode 2):** E2M1 The Loading Dock, E2M2 The Aisles, E2M3 The
+Big Freezer, E2M4 The Conveyor Belts (they carry you along!) and E2M5 The
+Lumber Yard (the Lumberjack).
+
+Find the **mouse hole** to leave each level. Doors with a blue, yellow or red
+stripe need that key. Vent covers open like doors, and the vents hide shortcuts
+and secrets.
 
 **Weapons:** Zombie Claws and the Crowbar (1), the Bone Shotgun (2, never runs
 out) and the Slingshot (2 again), the Rubber Band Gatling (3), the Soda Bazooka
@@ -51,7 +54,7 @@ the Lumberjack, who throws logs and has a chainsaw.
 
 **Cheats** (type them during play): `iddqd` and `zombie` (can't be hurt),
 `idkfa` and `cheese` (everything), `idclip` (walk through walls), `iddt`
-(reveal the map), `idclev##` (warp, for example `idclev15` for the attic).
+(reveal the map), `idclev##` (warp, for example `idclev15` for the attic or `idclev25` for the lumber yard).
 
 ## Run it locally
 

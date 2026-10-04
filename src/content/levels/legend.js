@@ -5,7 +5,8 @@
 //   { wall: 'texture' }                                  solid wall
 //   { wall: 'texture', use: 'exit', switchTo: 'tex' }    usable switch (any trigger action)
 //   { door: 'texture', jamb?, lock?, style?, secret?, tag? }
-//   { floor, ceiling ('sky' for open air), light (0-255), lightFx?, damage?, secret?, exit?, tag? }
+//   { floor, ceiling ('sky' for open air), light (0-255), lightFx?, damage?, secret?, exit?, tag?,
+//     push?: [dx, dy] (a conveyor belt: tiles per second it carries the player) }
 //   { base: '.', ...changes }                            copy another glyph and change parts
 // A space is solid nothingness outside the map.
 //

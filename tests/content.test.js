@@ -24,7 +24,8 @@ test('every level is in exactly one episode', () => {
 
 test('the warehouse episode has its own intermission picture', () => {
   const ep = registry.episodes.get('e2');
-  assert.equal(ep.levels[0], 'e2m1');
+  assert.deepEqual(ep.levels, ['e2m1', 'e2m2', 'e2m3', 'e2m4', 'e2m5']);
+  assert.ok(registry.images.has(ep.finale.endImage));
   assert.ok(registry.images.has(ep.intermission));
   assert.ok(ep.levels.every((id) => ep.map.spots[id]), 'every level has a spot on the picture');
 });

@@ -58,6 +58,8 @@ export default [
       const episode = [...game.registry.episodes.values()][ep - 1];
       const id = episode?.levels[map - 1];
       if (!id) return 'NO SUCH LEVEL';
+      // Switch episodes too, so finishing the level carries on in that episode.
+      game.session.episodeId = episode.id;
       game.startLevel(id, world.player.player.snapshot());
       return `WARPING TO ${id.toUpperCase()}`;
     },

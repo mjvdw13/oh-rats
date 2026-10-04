@@ -11,6 +11,7 @@ import { ellipse } from '../lib/props.js';
 import { smallGlyphs } from './fonts.js';
 import { ratFace } from './face.js';
 import { dadFrame } from '../sprites/dad.js';
+import { lumberjackFrame, chainsaw } from '../sprites/lumberjack.js';
 
 const W = 320;
 const H = 200;
@@ -385,7 +386,7 @@ function intermission() {
 // aisles and the big freezer downstairs; the conveyor belts and the lumber
 // yard (the Lumberjack's) upstairs; a delivery truck backed up to the dock.
 
-/** Map spots for the warehouse levels (E2M2..E2M5 are planned; see TODO.md). */
+/** Map spots for the warehouse levels (the same as the episode's `map.spots`). */
 export const MAP_SPOTS_E2 = { e2m1: [72, 150], e2m2: [160, 150], e2m3: [248, 150], e2m4: [104, 90], e2m5: [234, 90] };
 
 function intermissionWarehouse() {
@@ -548,11 +549,69 @@ function finaleEnd() {
   return c;
 }
 
+/** Episode 2's end picture: the lumber yard at sunset, the Lumberjack asleep in
+ * the sawdust, and the zombie rat on a pile of logs with his chainsaw. */
+function finaleWarehouse() {
+  const c = new PixelCanvas(W, H);
+  const seed = seedFrom('finale-e2-end');
+  // A sunset sky over a wall of stacked logs, and sawdust on the ground.
+  for (let y = 0; y < 90; y++) {
+    for (let x = 0; x < W; x++) c.set(x, y, ramp([[0, [120, 150, 230]], [0.55, [255, 190, 130]], [1, [255, 226, 160]]], y / 90));
+  }
+  glow(c, 250, 70, 60, [255, 236, 170], 0.5);
+  for (let y = 60; y < 150; y++) for (let x = 0; x < W; x++) c.set(x, y, C('wood', 0.18));
+  for (let row = 0; row < 7; row++) {
+    const cy = 66 + row * 13;
+    const off = row % 2 ? 8 : 0;
+    for (let cx = off - 8; cx < W + 8; cx += 16) {
+      for (let y = cy - 8; y <= cy + 8; y++) {
+        for (let x = cx - 8; x <= cx + 8; x++) {
+          const d = Math.hypot(x + 0.5 - cx, y + 0.5 - cy);
+          if (d > 7.5 || y < 60 || y >= 150) continue;
+          c.set(x, y, d > 6 ? C('wood', 0.3) : C('wood', 0.62 + Math.sin(d * 1.6) * 0.04 - d * 0.01));
+        }
+      }
+    }
+  }
+  for (let y = 150; y < H; y++) for (let x = 0; x < W; x++) c.set(x, y, C('wood', 0.62 + hash2(x, y, seed) * 0.12));
+  // The Lumberjack, fast asleep (the last frame of his sheet).
+  const lj = lumberjackFrame(
+    { lean: 3, headTilt: 3, armL: { spread: 80, swing: 0, bend: 20 }, armR: { spread: 70, swing: 0, bend: 20 }, legL: { thigh: 8, knee: 14, spread: 10 }, legR: { thigh: -6, knee: 4, spread: 10 }, fall: 1.57 },
+    { eyes: 'closed', zzz: 2 },
+  );
+  c.blit(lj, 22, 66);
+  // The zombie rat on a pile of logs, holding the chainsaw up high.
+  const m = new Model(W, H, { seed: 910 });
+  for (const [y, xs] of [[184, [184, 214, 244]], [162, [199, 229]]]) {
+    for (const x of xs) {
+      m.capsule(x, y, -8, x, y, 6, 14, 14, C('wood', 0.36), { ...MAT.wood, grain: 0.3 });
+      m.slab(ellipse(x, y, 13, 13, 20), 20, C('wood', 0.74), MAT.wood, { bevel: 1.5, thickness: 1 });
+      m.paint(x, y, 7, 7, C('wood', 0.66));
+    }
+  }
+  m.ellipsoid(214, 130, 16, 17, 16, 12, mix(C('toxic', 0.62), C('gray', 0.6), 0.3), MAT.fur); // the rat's body
+  m.capsule(228, 124, 18, 258, 92, 20, 4.5, 3.5, mix(C('toxic', 0.62), C('gray', 0.6), 0.3), MAT.fur); // a raised paw
+  chainsaw(m, 272, 64, 22, -1.1, { len: 40, k: 1.2, phase: 1 });
+  m.sphere(258, 92, 24, 4.5, mix(C('flesh', 0.62), C('toxic', 0.6), 0.2), MAT.flesh);
+  c.blit(m.render({ light: [0.5, -0.5, 0.7], ambient: 0.45 }), 0, 0);
+  const face = ratFace({ expr: 'grin' }, 2.4);
+  c.blit(face, 214 - face.w / 2, 130 - face.h + 10);
+  // Sawdust flying everywhere.
+  const r = rng(seed);
+  for (let k = 0; k < 90; k++) {
+    const x = r.int(150, 318);
+    const y = r.int(10, 150);
+    c.rect(x, y, 2, 1, r.pick([C('wood', 0.8), C('wood', 0.7), C('yellow', 0.85), C('beige', 0.95)]));
+  }
+  return c;
+}
+
 export default [
   { name: 'title', out: U('title'), draw: title, dither: 'fs' },
   { name: 'intermission', out: U('intermission'), draw: intermission, dither: 'fs' },
   { name: 'intermission-e2', out: U('intermission-e2'), draw: intermissionWarehouse, dither: 'fs' },
   { name: 'finale-bg', out: U('finale-bg'), draw: finaleBackdrop, dither: 'fs' },
   { name: 'finale-end', out: U('finale-end'), draw: finaleEnd, dither: 'fs' },
+  { name: 'finale-e2-end', out: U('finale-e2-end'), draw: finaleWarehouse, dither: 'fs' },
 ];
 

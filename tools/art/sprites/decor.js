@@ -343,6 +343,21 @@ const forklift = () =>
     m.paint(36, 36, 6, 2, K); // a stripe
   });
 
+/** A pile of logs for the lumber yard: three on the bottom, two, then one. */
+const logPile = () =>
+  model(48, 40, 349, (m) => {
+    shadow(m, 24, 38, 22);
+    // Each log lies pointing at you: bark round the side, the pale cut end in front.
+    for (const [y, xs] of [[31, [9, 24, 39]], [19, [16.5, 31.5]], [7.5, [24]]]) {
+      for (const x of xs) {
+        m.capsule(x, y, -6, x, y, 6, 7, 7, C('wood', 0.36), { ...MAT.wood, grain: 0.3 });
+        m.slab(ellipse(x, y, 6.6, 6.6, 16), 12, C('wood', 0.74), MAT.wood, { bevel: 1, thickness: 1 });
+        m.paint(x, y, 3.6, 3.6, C('wood', 0.66));
+        m.paint(x, y, 1.2, 1.2, C('wood', 0.5));
+      }
+    }
+  });
+
 /** A traffic cone with a white band. */
 const trafficCone = () =>
   model(24, 32, 347, (m) => {
@@ -376,4 +391,5 @@ export default [
   { name: 'pallet', out: D('pallet'), draw: pallet, dither: 'fs' },
   { name: 'forklift', out: D('forklift'), draw: forklift, dither: 'fs' },
   { name: 'traffic-cone', out: D('traffic-cone'), draw: trafficCone, dither: 'fs' },
+  { name: 'log-pile', out: D('log-pile'), draw: logPile, dither: 'fs' },
 ];

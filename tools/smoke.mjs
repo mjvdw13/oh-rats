@@ -92,6 +92,11 @@ const check = (cond, what) => {
   await p.waitForTimeout(300);
   await p.keyboard.press('Enter'); // NEW GAME
   await p.waitForTimeout(300);
+  if (new Registry(content).episodes.size > 1) {
+    await shot(p, 'episode-menu');
+    await p.keyboard.press('Enter'); // the first episode
+    await p.waitForTimeout(300);
+  }
   await shot(p, 'skill-menu');
   await p.keyboard.press('Enter'); // default skill
   const started = await p

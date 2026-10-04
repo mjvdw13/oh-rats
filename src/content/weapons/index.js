@@ -8,5 +8,6 @@ import sodaBazooka from './soda-bazooka.js';
 import megaMicrowave from './mega-microwave.js';
 import flareGun from './flare-gun.js';
 import blowTorch from './blow-torch.js';
+import chainsaw from './chainsaw.js';
 
-export default [claws, crowbar, boneShotgun, slingshot, bandGatling, sodaBazooka, megaMicrowave, flareGun, blowTorch];
+export default [claws, crowbar, boneShotgun, slingshot, bandGatling, sodaBazooka, megaMicrowave, flareGun, blowTorch, chainsaw];

@@ -337,6 +337,19 @@ const pickupCrowbar = () =>
     }
   });
 
+const pickupChainsaw = () =>
+  pickup((m) => {
+    m.capsule(26, 20, 6, 60, 18, 6, 3.2, 2.6, C('steel', 0.78), MAT.metal); // the guide bar
+    for (let x = 30; x < 58; x += 4) {
+      m.paint(x, 16.6, 0.8, 0.8, C('gray', 0.15), MAT.metal);
+      m.paint(x + 2, 21.2, 0.8, 0.8, C('gray', 0.15), MAT.metal);
+    }
+    m.capsule(8, 22, 8, 24, 20, 8, 8, 7.5, C('orange', 0.62), MAT.plastic); // the motor
+    m.capsule(10, 17, 13, 20, 16, 13, 3, 3, C('gray', 0.18), MAT.plastic);
+    m.capsule(6, 14, 12, 22, 11, 12, 1.6, 1.6, C('gray', 0.16), MAT.plastic); // the top handle
+    m.paint(18, 23, 3, 1.6, C('beige', 0.95));
+  });
+
 const pickupSlingshot = () =>
   pickup((m) => {
     const wood = C('wood', 0.5);
@@ -474,6 +487,7 @@ export default [
   { name: 'pickup-soda-bazooka', out: I('pickup-soda-bazooka'), draw: pickupBazooka, dither: 'fs' },
   { name: 'pickup-mega-microwave', out: I('pickup-mega-microwave'), draw: pickupMicrowave, dither: 'fs' },
   { name: 'pickup-crowbar', out: I('pickup-crowbar'), draw: pickupCrowbar, dither: 'fs' },
+  { name: 'pickup-chainsaw', out: I('pickup-chainsaw'), draw: pickupChainsaw, dither: 'fs' },
   { name: 'pickup-slingshot', out: I('pickup-slingshot'), draw: pickupSlingshot, dither: 'fs' },
   { name: 'pickup-flare-gun', out: I('pickup-flare-gun'), draw: pickupFlareGun, dither: 'fs' },
   { name: 'pickup-blow-torch', out: I('pickup-blow-torch'), draw: pickupBlowTorch, dither: 'fs' },

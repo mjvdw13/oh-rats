@@ -1,12 +1,14 @@
 // Effects and projectiles: dust puffs, fur tufts, zombie goo, fizzy
 // explosions, sparkly pop-in dust, spitballs, mousetraps, junk balls, soda
-// rockets, the Mega Microwave's blast, marbles, flares and blow torch flames. Glowing bits use fullbright colours.
+// rockets, the Mega Microwave's blast, marbles, flares, blow torch flames and
+// the Lumberjack's logs. Glowing bits use fullbright colours.
 import { PixelCanvas } from '../lib/canvas.js';
 import { C, G } from '../lib/pal.js';
 import { Model, MAT } from '../lib/model.js';
 import { sheet, flash } from '../lib/sprite.js';
 import { fbm, hash2, rng } from '../lib/noise.js';
 import { mousetrap } from './dad.js';
+import { log } from './lumberjack.js';
 import { can, marble } from './items.js';
 
 const F = (name) => `assets/sprites/fx/${name}.png`;
@@ -147,6 +149,33 @@ function mousetrapShot() {
   return sheet([...spin, ...snap]);
 }
 
+/** The Lumberjack's log, tumbling end over end, then breaking into splinters. */
+function logShot() {
+  const spin = [0, 1, 2, 3].map((f) => {
+    const m = new Model(32, 32, { seed: 95 });
+    const a = (f / 4) * Math.PI;
+    const [dx, dy] = [Math.cos(a) * 9, Math.sin(a) * 9];
+    log(m, 16 - dx, 16 - dy, 16 + dx, 16 + dy, 4, 4);
+    return m.render(RENDER);
+  });
+  const smash = [0, 1, 2].map((f) => {
+    const c = new PixelCanvas(32, 32);
+    const r = rng(97 + f);
+    if (f < 2) smoke(c, 16, 18, 5 + f * 3, 98 + f, 0.5);
+    for (let k = 0; k < 16; k++) {
+      const a = r.range(0, Math.PI * 2);
+      const d = r.range(2, 6 + f * 4);
+      const x = 16 + Math.cos(a) * d;
+      const y = 18 + Math.sin(a) * d * 0.7 + f;
+      const col = r.pick([C('wood', 0.38), C('wood', 0.72), C('wood', 0.55)]);
+      c.set(x, y, col);
+      c.set(x + Math.cos(a), y + Math.sin(a), col);
+    }
+    return c;
+  });
+  return sheet([...spin, ...smash]);
+}
+
 /** The Pack Rat's lobbed ball of junk. */
 function junkBall() {
   const cols = [C('blood', 0.6), C('sky', 0.6), C('yellow', 0.8), C('green', 0.6)];
@@ -277,6 +306,7 @@ export default [
   { name: 'teleport-fog', out: F('teleport-fog'), draw: teleportFog },
   { name: 'spitball', out: F('spitball'), draw: spitball, dither: 'fs' },
   { name: 'mousetrap', out: F('mousetrap'), draw: mousetrapShot, dither: 'fs' },
+  { name: 'log', out: F('log'), draw: logShot, dither: 'fs' },
   { name: 'junk-ball', out: F('junk-ball'), draw: junkBall, dither: 'fs' },
   { name: 'soda-rocket', out: F('soda-rocket'), draw: sodaRocket },
   { name: 'microwave-blast', out: F('microwave-blast'), draw: microwaveBlast },

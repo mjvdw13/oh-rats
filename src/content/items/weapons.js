@@ -75,4 +75,14 @@ export default [
     message: 'You got the BLOW TORCH! FWOOOSH!',
     sound: 'weapon-pickup',
   }),
+  // The Lumberjack drops this when you beat him, so it has no map glyph.
+  defineItem({
+    id: 'pickup-chainsaw',
+    name: 'Chainsaw',
+    sheet: S('pickup-chainsaw'),
+    radius: 0.35,
+    pickup: { weapon: 'chainsaw' },
+    message: 'You got the CHAINSAW! VRRRRRMMMM!',
+    sound: 'weapon-pickup',
+  }),
 ];

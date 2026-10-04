@@ -27,7 +27,8 @@ export const episodes = [
     levels: ['e2m1'],
     // A cut-away of the warehouse. E2M2..E2M5 get their spots when they're built:
     // e2m2 [160, 150] the aisles, e2m3 [248, 150] the freezer, e2m4 [104, 90] the
-    // conveyor belts, e2m5 [234, 90] the office (MAP_SPOTS_E2 in tools/art/ui/screens.js).
+    // conveyor belts, e2m5 [234, 90] the lumber yard, where the Lumberjack is the
+    // boss (MAP_SPOTS_E2 in tools/art/ui/screens.js).
     intermission: 'intermission-e2',
     map: { spots: { e2m1: [72, 150] } },
     finale: { text: strings.finale2, background: 'finale-bg', endImage: 'intermission-e2', endText: 'TO BE CONTINUED...', music: 'finale' },

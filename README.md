@@ -41,11 +41,13 @@ doors, and the vents hide shortcuts and secrets.
 
 **Weapons:** Zombie Claws and the Crowbar (1), the Bone Shotgun (2, never runs
 out) and the Slingshot (2 again), the Rubber Band Gatling (3), the Soda Bazooka
-(4), the Mega Microwave (5), the Flare Gun (6) and the Blow Torch (7). Press a
-number twice to swap between two weapons that share it.
+(4), the Mega Microwave (5), the Flare Gun (6) and the Blow Torch (7). Beat the
+warehouse boss and you get his Chainsaw (1 again). Press a number twice to swap
+between weapons that share it.
 
 **Rats:** House Rats, Slingshot Rats, Spitball Rats, Chonky Rats, see-through
-Ninja Rats and big Pack Rats. And Dad, who throws mousetraps.
+Ninja Rats and big Pack Rats. And the bosses: Dad, who throws mousetraps, and
+the Lumberjack, who throws logs and has a chainsaw.
 
 **Cheats** (type them during play): `iddqd` and `zombie` (can't be hurt),
 `idkfa` and `cheese` (everything), `idclip` (walk through walls), `iddt`

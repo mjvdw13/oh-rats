@@ -107,6 +107,7 @@ export default {
     'You squeeze through the mouse hole and out of the loading dock.\n\n' +
     'Behind you, the forklift beeps. In front of you: aisle after aisle of boxes, stacked up to the ' +
     'roof. Somewhere in there, something smells like a LOT of cheese.\n\n' +
-    'And something else is in here too. Something with whiskers. Big whiskers.\n\n' +
+    'And from somewhere out back, past all the boxes, comes a sound: VRRRRRRMMMMM. A chainsaw. ' +
+    'And a big voice yelling TIMBERRRR!\n\n' +
     'TO BE CONTINUED...',
 };

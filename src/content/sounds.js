@@ -96,6 +96,26 @@ export default [
     synth: { wave: 'noise', duration: 0.6, attack: 0.002, release: 0.5, lowpass: [6000, 900], noiseHold: 6, volume: 0.7, layers: [thump(150, 50, 0.25, 0.7), { ...fizz(0.6, 0.35), delay: 0.05 }], ...crunch },
     pitchVariance: 0.1,
   }),
+  // The chainsaw: a pull-start sputter into a revving motor, a buzz while it
+  // cuts (each short buzz runs into the next), and a grinding bite.
+  defineSound({
+    id: 'chainsaw-start',
+    synth: {
+      ...click(300, 0.4),
+      repeat: { count: 4, interval: 0.09, pitch: 1.15 },
+      layers: [{ wave: 'saw', freq: 70, freqEnd: 150, duration: 0.6, delay: 0.32, attack: 0.02, release: 0.2, lowpass: 1800, distortion: 0.5, vibrato: { rate: 28, depth: 1.2 }, volume: 0.4 }],
+    },
+  }),
+  defineSound({
+    id: 'chainsaw-buzz',
+    synth: { wave: 'saw', freq: 150, freqEnd: 165, duration: 0.09, attack: 0.005, release: 0.02, lowpass: 2600, distortion: 0.6, vibrato: { rate: 35, depth: 1.5 }, volume: 0.35, layers: [burst(0.08, [4000, 1500], 0.15, 3)] },
+    pitchVariance: 0.03,
+  }),
+  defineSound({
+    id: 'chainsaw-hit',
+    synth: { wave: 'saw', freq: 110, freqEnd: 90, duration: 0.1, attack: 0.002, release: 0.04, lowpass: 1800, distortion: 0.8, volume: 0.4, layers: [burst(0.1, [5000, 1200], 0.4, 2)] },
+    pitchVariance: 0.08,
+  }),
   defineSound({ id: 'torch-roar', synth: { wave: 'noise', duration: 0.12, attack: 0.01, release: 0.08, lowpass: [1400, 900], noiseHold: 2, volume: 0.45 }, pitchVariance: 0.12 }),
 
   // --------------------------------------------------------- world
@@ -208,4 +228,21 @@ export default [
   defineSound({ id: 'dad-step', synth: { ...thump(60, 30, 0.25, 0.9), layers: [burst(0.12, [900, 200], 0.4, 6)] } }),
   defineSound({ id: 'stomp', synth: { ...thump(50, 22, 0.5, 1), layers: [burst(0.3, [1200, 150], 0.7, 6)] } }),
   defineSound({ id: 'trap-snap', synth: { ...click(2400, 0.7), layers: [{ ...burst(0.12, [7000, 2000], 0.6, 1) }, thump(200, 80, 0.08, 0.6)] } }),
+
+  // --------------------------------------------------------- the Lumberjack
+  defineSound({ id: 'lumberjack-sight', synth: voice(130, 170, 0.5, 0.75, { layers: [{ ...voice(170, 90, 0.9, 0.65, { vibrato: { rate: 5, depth: 0.6 } }), delay: 0.4 }] }) }), // "TIM-BERRRR!"
+  defineSound({ id: 'lumberjack-pain', synth: voice(210, 120, 0.25, 0.7) }), // "OOF!"
+  defineSound({
+    id: 'lumberjack-death', // a dizzy "whoa-oa", a thud, then a deep snore
+    synth: {
+      ...voice(180, 100, 0.9, 0.7, { vibrato: { rate: 6, depth: 2 } }),
+      layers: [
+        { ...thump(55, 22, 0.5, 1), delay: 0.9 },
+        { wave: 'noise', duration: 0.8, delay: 1.6, attack: 0.3, release: 0.3, lowpass: 220, noiseHold: 14, volume: 0.5 },
+        { wave: 'noise', duration: 0.8, delay: 2.7, attack: 0.3, release: 0.3, lowpass: 220, noiseHold: 14, volume: 0.45 },
+      ],
+    },
+  }),
+  // A log smashing into splinters.
+  defineSound({ id: 'log-smash', synth: { ...thump(90, 40, 0.2, 0.9), layers: [{ ...click(800, 0.4), repeat: { count: 4, interval: 0.04, pitch: 0.85, decay: 0.8 } }, burst(0.2, [2500, 400], 0.5, 3)] } }),
 ];

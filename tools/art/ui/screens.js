@@ -382,8 +382,8 @@ function intermission() {
 
 // ---------------------------------------------------------------------------
 // Episode 2's intermission: a cut-away of the warehouse. The loading dock, the
-// aisles and the big freezer downstairs; the conveyor belts and the manager's
-// office upstairs; a delivery truck backed up to the dock.
+// aisles and the big freezer downstairs; the conveyor belts and the lumber
+// yard (the Lumberjack's) upstairs; a delivery truck backed up to the dock.
 
 /** Map spots for the warehouse levels (E2M2..E2M5 are planned; see TODO.md). */
 export const MAP_SPOTS_E2 = { e2m1: [72, 150], e2m2: [160, 150], e2m3: [248, 150], e2m4: [104, 90], e2m5: [234, 90] };
@@ -412,7 +412,7 @@ function intermissionWarehouse() {
   room(118, 120, 86, 52, C('beige', 0.86), C('concrete', 0.6)); // the aisles
   room(212, 120, 72, 52, C('sky', 0.85), C('sky', 0.95)); // the big freezer
   room(36, 64, 140, 46, C('concrete', 0.72), C('steel', 0.4)); // conveyor belts
-  room(184, 64, 100, 46, C('wood', 0.6), C('blood', 0.45)); // the manager's office
+  room(184, 64, 100, 46, C('wood', 0.62), C('wood', 0.35)); // the lumber yard
   // The dock: a roll-up door and a truck backed up to it.
   c.rect(38, 136, 18, 32, C('gray', 0.85));
   for (let y = 138; y < 168; y += 4) c.rect(38, y, 18, 1, C('gray', 0.6));
@@ -439,16 +439,21 @@ function intermissionWarehouse() {
     c.rect(x, y, 12, 8, C('yellow', 0.8));
     c.rect(x, y, 12, 2, C('yellow', 0.95));
   }
-  // Conveyor belts carrying boxes, and the office's desk and window.
+  // Conveyor belts carrying boxes, and the lumber yard's logs and stump.
   for (const y of [84, 100]) {
     c.rect(42, y, 128, 3, C('gray', 0.25));
     for (let x = 44; x < 168; x += 6) c.set(x, y + 1, C('gray', 0.6));
     for (let x = 50; x < 166; x += 22) c.rect(x, y - 7, 9, 7, C('wood', 0.62));
   }
-  c.rect(250, 70, 26, 16, C('sky', 0.7)); // window
-  c.frame(250, 70, 26, 16, C('beige', 0.95));
-  c.rect(196, 92, 34, 6, C('wood', 0.4)); // desk
-  c.rect(212, 84, 8, 8, G('cyan', 0.6)); // computer
+  for (const [x, y] of [[196, 100], [205, 100], [214, 100], [223, 100], [200.5, 92], [209.5, 92], [218.5, 92], [205, 84], [214, 84]]) {
+    c.ellipse(x, y, 4.5, 4.5, C('wood', 0.3)); // a pile of logs, cut ends out
+    c.ellipse(x, y, 3.2, 3.2, C('wood', 0.75));
+    c.set(Math.round(x), Math.round(y), C('wood', 0.5));
+  }
+  c.rect(250, 90, 22, 14, C('wood', 0.4)); // a big tree stump
+  c.ellipse(261, 90, 11, 3, C('wood', 0.75));
+  c.rect(258, 82, 2, 9, C('steel', 0.8)); // with an axe in it
+  c.rect(255, 80, 7, 3, C('steel', 0.6));
   // Vents along the roof, down the side, and between the floors.
   const duct = (pts) => {
     for (let i = 0; i + 1 < pts.length; i++) {
@@ -465,7 +470,7 @@ function intermissionWarehouse() {
   tinyText(c, 'THE AISLES', 142, 122, C('gray', 0.25));
   tinyText(c, 'BIG FREEZER', 226, 130, C('navy', 0.6));
   tinyText(c, 'CONVEYOR BELTS', 76, 66, C('gray', 0.2));
-  tinyText(c, 'OFFICE', 222, 66, C('beige', 0.95));
+  tinyText(c, 'LUMBER YARD', 212, 66, C('beige', 0.95));
   // Soften the middle so the tally text reads.
   c.eachOpaque((x, y, p) => mix(p, [20, 30, 60], 0.25 * (1 - Math.min(1, Math.hypot((x - 160) / 160, (y - 100) / 100)))));
   return c;

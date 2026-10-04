@@ -445,6 +445,70 @@ function blowTorchSheet() {
   return sheet([blowTorchFrame(), blowTorchFrame({ jet: 1 }), blowTorchFrame({ jet: 2 }), blowTorchFrame({ pilot: 1 })]);
 }
 
+// ------------------------------------------------------------------ chainsaw
+
+const SAW_ORANGE = C('orange', 0.62);
+const SAW_BAR = C('steel', 0.78);
+const SAW_BLACK = C('gray', 0.16);
+
+/**
+ * The Lumberjack's chainsaw, held out in front in both paws: the orange motor
+ * at the bottom, the guide bar pointing up and away. `phase` moves the chain;
+ * `shake` jiggles the whole thing; `dust` throws sawdust and sparks.
+ */
+function chainsawFrame({ phase = 0, shake = [0, 0], dust = 0 } = {}) {
+  const m = new Model(160, 96, { seed: 151 });
+  const [sx, sy] = shake;
+  const cx = 82 + sx;
+  const by = 52 + sy;
+  // The guide bar narrows into the distance, with the chain on both edges.
+  const tip = [cx - 3, 2 + sy, 2];
+  m.capsule(cx, by, 16, ...tip, 6.5, 3.6, SAW_BAR, MAT.metal);
+  for (let k = 0; k < 9; k++) {
+    const t = (k + (phase % 2) * 0.5) / 9;
+    const x = cx + (tip[0] - cx) * t;
+    const y = by + (tip[1] - by) * t;
+    const r = 6.5 + (3.6 - 6.5) * t;
+    for (const side of [-1, 1]) m.paint(x + side * (r + 0.2), y, 1.4 - t * 0.6, 1.4 - t * 0.6, SAW_BLACK, MAT.metal);
+  }
+  m.paint(cx - 2, by - 20, 1.6, 7, C('steel', 0.95)); // a shine down the bar
+  // The motor housing, its black engine cover and the front handle loop.
+  m.capsule(cx - 22, by + 22, 26, cx + 18, by + 18, 24, 17, 15, SAW_ORANGE, MAT.plastic);
+  m.capsule(cx - 10, by + 8, 38, cx + 12, by + 6, 36, 6, 5, SAW_BLACK, MAT.plastic);
+  m.paint(cx + 2, by + 22, 6, 3, C('beige', 0.95)); // the logo stripe
+  for (let k = 0; k < 4; k++) m.paint(cx - 16 + k * 4, by + 24, 1, 3, SAW_BLACK); // air vents
+  const loop = [[cx - 34, by + 26], [cx - 34, by + 4], [cx - 20, by - 6], [cx + 4, by - 8]];
+  for (let k = 0; k + 1 < loop.length; k++) m.capsule(...loop[k], 34, ...loop[k + 1], 34, 3, 3, SAW_BLACK, MAT.plastic);
+  // Paws: the left on the front handle, the right on the rear grip.
+  arm(m, [0, 120, 30], [cx - 36, by + 12, 34], 11);
+  grip(m, cx - 34, by + 8, 38, 8.5, 1);
+  arm(m, [160, 124, 28], [cx + 32, by + 26, 32], 11);
+  grip(m, cx + 30, by + 22, 36, 8.5, -1);
+  const c = m.render(RENDER);
+  if (dust) {
+    // Sawdust and sparks spraying off the chain.
+    for (let k = 0; k < 30; k++) {
+      const a = k * 2.39 + dust;
+      const d = 3 + ((k * 5) % 18);
+      const x = Math.round(tip[0] + Math.cos(a) * d);
+      const y = Math.round(tip[1] + 12 + Math.abs(Math.sin(a)) * d);
+      const col = k % 4 ? C('wood', 0.75) : G('yellow', 0.9);
+      c.set(x, y, col);
+      if (k % 3 === 0) c.set(x + 1, y, col);
+    }
+  }
+  return c;
+}
+
+function chainsawSheet() {
+  return sheet([
+    chainsawFrame(),
+    chainsawFrame({ phase: 1, shake: [-2, 1], dust: 1 }),
+    chainsawFrame({ phase: 0, shake: [2, 2], dust: 2 }),
+    chainsawFrame({ phase: 1, shake: [0, 1] }),
+  ]);
+}
+
 export default [
   { name: 'claws', out: W('claws'), draw: clawsSheet, dither: 'fs' },
   { name: 'bone-shotgun', out: W('bone-shotgun'), draw: boneShotgunSheet, dither: 'fs' },
@@ -455,6 +519,7 @@ export default [
   { name: 'slingshot', out: W('slingshot'), draw: slingshotSheet, dither: 'fs' },
   { name: 'flare-gun', out: W('flare-gun'), draw: flareGunSheet, dither: 'fs' },
   { name: 'blow-torch', out: W('blow-torch'), draw: blowTorchSheet, dither: 'fs' },
+  { name: 'chainsaw', out: W('chainsaw'), draw: chainsawSheet, dither: 'fs' },
 ];
 
 export { arm, grip, boneRod, ZFUR, PAW, BONE };

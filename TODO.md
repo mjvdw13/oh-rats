@@ -1,7 +1,7 @@
 # TODO: handoff
 
 State as of 2026-10-03: *Raccoon Alex* has been repurposed into *Oh, Rats!*. The
-game boots and plays from the title screen to the finale. `npm test` (52 tests)
+game boots and plays from the title screen to the finale. `npm test` (55 tests)
 and `npm run validate` (0 errors, 0 warnings) both pass. All art is regenerated
 from `tools/art/`.
 
@@ -56,14 +56,23 @@ from `tools/art/`.
    - The engine change: an episode's `intermission` names its picture.
    - The warehouse levels share `tools/levels/warehouse.py` (their legend and
      the prop glyphs P, F, C), since every shared glyph is taken.
+   - The boss is done: **the Lumberjack** (`src/content/monsters/lumberjack.js`,
+     art in `tools/art/sprites/lumberjack.js`). He throws logs and swings a
+     chainsaw up close, gets mad at half health (3000), and when he's beaten
+     he drops the **Chainsaw** (`src/content/weapons/chainsaw.js`, slot 1).
+     Tests in `tests/lumberjack.test.js`. He has no glyph: his level gives him
+     one in its `thingLegend`. Nobody has fought him in a real level yet.
    - Next: E2M2 The Aisles, E2M3 The Big Freezer, E2M4 The Conveyor Belts,
-     E2M5 The Manager's Office. Each one gets added to the episode's `levels`
-     and `map.spots` (the planned spots are in the comment there and in
-     `MAP_SPOTS_E2`).
-   - Needs art for those: freezer walls and ice, conveyor belts, office
-     walls, maybe a "the floor is a conveyor belt" floor.
-   - Who's the episode 2 boss? Ask the son (the cat from episode 1's ending?).
-     When the episode is finished, replace `strings.finale2` and its end
+     E2M5 The Lumber Yard (the boss fight). Each one gets added to the
+     episode's `levels` and `map.spots` (the planned spots are in the comment
+     there and in `MAP_SPOTS_E2`).
+   - E2M5 must not end the episode the moment he falls (Dad's level does, with
+     a `killed` trigger): the player has to grab the chainsaw first. Open the
+     way to the exit when he's beaten instead, and end the episode at the exit.
+   - Needs art for those: freezer walls and ice, conveyor belts, lumber yard
+     walls (log piles, sawdust floor), maybe a "the floor is a conveyor belt"
+     floor.
+   - When the episode is finished, replace `strings.finale2` and its end
      picture (it borrows `intermission-e2` for now).
    - E2M1 is unplayed: check its difficulty (35 rats on skill 3, and you start
      with only the Bone Shotgun) and the big, open yard.

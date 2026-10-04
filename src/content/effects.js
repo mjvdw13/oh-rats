@@ -38,6 +38,18 @@ export const projectiles = [
     radius: 0.18,
     sounds: { fire: 'throw', explode: 'trap-snap' },
   }),
+  // The Lumberjack: a log, tumbling end over end.
+  defineProjectile({
+    id: 'log',
+    sheet: FX('log', 32, 32),
+    anims: { fly: { frames: [0, 1, 2, 3], fps: 12, loop: true }, explode: { frames: [4, 5, 6], fps: 12 } },
+    fullbright: false,
+    speed: 10,
+    damage: [15, 35],
+    splash: { radius: 1.4, damage: 40 },
+    radius: 0.22,
+    sounds: { fire: 'throw', explode: 'log-smash' },
+  }),
   // Pack Rat: a lobbed ball of junk (gum wrappers, bottle caps, string).
   defineProjectile({
     id: 'junk-ball',
